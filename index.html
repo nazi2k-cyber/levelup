@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>LEVEL UP: REBOOT | First Principles Master</title>
+    <title>LEVEL UP: REBOOT | Optimized MVP</title>
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         
@@ -29,7 +29,7 @@
             box-sizing: border-box; overflow: hidden; transition: background-color 0.3s, color 0.3s;
         }
 
-        /* --- 1. 로그인 스크린 스타일 --- */
+        /* --- 1. 로그인 스크린 --- */
         #login-screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-color: var(--bg-dark); z-index: 9999;
@@ -39,148 +39,139 @@
         .login-box {
             width: 100%; max-width: 350px; background: var(--panel-bg);
             border: 1px solid var(--border-color); border-radius: 12px;
-            padding: 40px 20px; box-shadow: 0 0 25px rgba(0, 217, 255, 0.15);
-            text-align: center; max-height: 90vh; overflow-y: auto;
+            padding: 30px 20px; box-shadow: 0 0 25px rgba(0, 217, 255, 0.15); text-align: center;
         }
-        .login-box::-webkit-scrollbar { display: none; }
         .login-title { font-size: 1.8rem; font-weight: 900; color: var(--neon-blue); margin-bottom: 5px; letter-spacing: 1px; }
-        .login-sub { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 30px; }
+        .login-sub { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 25px; }
         .login-input {
-            width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 6px;
+            width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 6px;
             border: 1px solid var(--border-color); background: rgba(0,0,0,0.3);
-            color: var(--text-main); box-sizing: border-box; outline: none; font-family: 'Pretendard', sans-serif; font-size: 0.95rem;
-            transition: all 0.3s ease;
+            color: var(--text-main); box-sizing: border-box; outline: none; font-size: 0.9rem;
         }
         .login-input:focus { border-color: var(--neon-blue); box-shadow: 0 0 8px rgba(0, 217, 255, 0.3); }
         [data-theme="light"] .login-input { background: rgba(255,255,255,0.8); }
-        
-        .hint-text { font-size: 0.7rem; color: var(--text-sub); text-align: left; margin-top: -8px; margin-bottom: 12px; padding-left: 5px; display: none; }
+        .hint-text { font-size: 0.7rem; color: var(--text-sub); text-align: left; margin-top: -6px; margin-bottom: 10px; padding-left: 5px; display: none; }
         .disclaimer-text { font-size: 0.65rem; color: #888; text-align: left; margin-bottom: 15px; padding: 0 5px; line-height: 1.3; display: none; }
-        
         .btn-google { background: #fff; color: #333; border: 1px solid #ddd; display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 10px; }
-        .btn-google:hover { background: #f1f1f1; }
-        .login-toggle { font-size: 0.85rem; color: var(--text-sub); margin-top: 25px; cursor: pointer; text-decoration: underline; transition: color 0.2s; }
-        .login-toggle:hover { color: var(--neon-blue); }
+        .login-toggle { font-size: 0.8rem; color: var(--text-sub); margin-top: 20px; cursor: pointer; text-decoration: underline; }
 
-        /* --- 메인 앱 컨테이너 --- */
-        #app-container {
-            display: none; 
-            flex-direction: column; width: 100%; height: 100%;
-        }
-
-        header { padding: 15px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--panel-bg); z-index: 10; }
+        /* --- 메인 앱 레이아웃 --- */
+        #app-container { display: none; flex-direction: column; width: 100%; height: 100%; }
+        header { padding: 12px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--panel-bg); z-index: 10; }
         #sys-title { font-weight: 900; letter-spacing: 1px; font-size: 1.1rem; }
-        .level-badge { background: var(--neon-blue); color: #fff; font-weight: bold; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; transition: transform 0.3s; }
-
-        main { flex-grow: 1; overflow-y: auto; padding: 20px; padding-bottom: calc(90px + env(safe-area-inset-bottom)); }
+        .level-badge { background: var(--neon-blue); color: #fff; font-weight: bold; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; }
+        main { flex-grow: 1; overflow-y: auto; padding: 15px; padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
         .view-section { display: none; animation: fadeIn 0.3s ease; }
         .view-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
 
-        .system-card { background: var(--panel-bg); border: 1px solid var(--border-color); padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h2 { font-size: 1.05rem; color: var(--neon-blue); margin-top: 0; margin-bottom: 15px; letter-spacing: 1px; text-transform: uppercase; }
+        /* --- UI 컴포넌트 최적화 --- */
+        .system-card { background: var(--panel-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h2 { font-size: 1rem; color: var(--neon-blue); margin-top: 0; margin-bottom: 12px; text-transform: uppercase; }
 
-        .profile-box { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
-        .profile-image-container { position: relative; width: 65px; height: 65px; flex-shrink: 0; }
-        .profile-img { width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--neon-blue); object-fit: cover; background: #222; }
-        .upload-overlay { position: absolute; bottom: -5px; right: -5px; background: var(--neon-blue); width: 26px; height: 26px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 14px; cursor: pointer; border: 2px solid var(--bg-dark); }
-        #imageUpload { display: none; }
+        /* 프로필 및 레벨업 통합 압축 레이아웃 */
+        .profile-compact-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .profile-box { display: flex; align-items: center; gap: 12px; }
+        .profile-image-container { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--neon-blue); background: #222; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        .profile-img { width: 60%; height: 60%; object-fit: contain; filter: invert(0.5); }
+        .title-badge { display: inline-block; padding: 2px 6px; font-size: 0.65rem; font-weight: bold; background: linear-gradient(45deg, rgba(181, 60, 255, 0.2), transparent); border: 1px solid var(--neon-purple); color: var(--neon-purple); border-radius: 4px; margin-bottom: 3px; }
+        .name-container { display: flex; align-items: center; gap: 5px; }
+        .btn-edit-name { background: none; border: none; font-size: 0.8rem; cursor: pointer; padding: 0; color: var(--text-sub); }
         
-        .title-badge { display: inline-block; padding: 3px 8px; font-size: 0.75rem; font-weight: bold; background: linear-gradient(45deg, rgba(181, 60, 255, 0.2), transparent); border: 1px solid var(--neon-purple); color: var(--neon-purple); border-radius: 4px; margin-bottom: 5px; }
-        .btn-history { background: transparent; border: 1px solid var(--text-sub); color: var(--text-sub); font-size: 0.65rem; padding: 3px 6px; border-radius: 4px; cursor: pointer; margin-top: 5px; }
-        
-        .name-container { display: flex; align-items: center; gap: 8px; }
-        .btn-edit-name { background: none; border: none; font-size: 0.9rem; cursor: pointer; padding: 0; color: var(--text-sub); transition: 0.2s; }
-        .btn-edit-name:hover { color: var(--neon-blue); transform: scale(1.1); }
+        .compact-score-box { text-align: right; }
+        .compact-score-val { font-size: 1.6rem; font-weight: 900; color: var(--neon-blue); line-height: 1; }
 
-        .levelup-panel { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 204, 0, 0.05); border: 1px solid var(--neon-gold); padding: 15px; border-radius: 8px; margin-bottom: 20px; }
-        .btn-primary { width: 100%; padding: 12px; background: var(--neon-blue); border: none; color: white; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.2s; text-align: center; }
-        .btn-primary:disabled { background: #555; color: #888; border-color: #444; cursor: not-allowed; }
+        .levelup-panel-compact { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 204, 0, 0.05); border: 1px solid var(--neon-gold); padding: 10px 12px; border-radius: 6px; }
+        .btn-primary { padding: 10px; background: var(--neon-blue); border: none; color: white; font-weight: bold; border-radius: 6px; cursor: pointer; text-align: center; font-size: 0.85rem; width: 100%; }
+        .btn-levelup-sm { width: auto; padding: 6px 12px; font-size: 0.8rem; }
+        .btn-primary:disabled { background: #444; color: #777; border-color: #333; cursor: not-allowed; }
 
-        .stat-summary { text-align: center; margin-bottom: 15px; background: linear-gradient(45deg, rgba(0,217,255,0.05), transparent); padding: 15px; border-radius: 8px; border: 1px solid rgba(0,217,255,0.2); }
-        
-        .radar-chart-container { display: flex; justify-content: center; margin: 10px 0 20px 0; }
-        .radar-chart { width: 100%; max-width: 200px; height: auto; aspect-ratio: 1/1; }
+        /* 레이더 차트 및 스탯바 압축 */
+        .radar-chart-container { display: flex; justify-content: center; margin: 5px 0 15px 0; }
+        .radar-chart { width: 100%; max-width: 150px; height: auto; aspect-ratio: 1/1; }
         .radar-bg-line { fill: none; stroke: var(--border-color); stroke-width: 0.8; }
-        .radar-polygon { fill: rgba(0, 217, 255, 0.25); stroke: var(--neon-blue); stroke-width: 2; transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        .radar-point { fill: var(--neon-blue); transition: all 0.8s; }
-        .radar-label { fill: var(--text-sub); font-size: 7px; font-weight: bold; }
-        .radar-value { fill: var(--neon-blue); font-size: 7px; font-weight: bold; }
+        .radar-polygon { fill: rgba(0, 217, 255, 0.25); stroke: var(--neon-blue); stroke-width: 2; transition: all 0.6s ease; }
+        .radar-point { fill: var(--neon-blue); transition: all 0.6s; }
+        .radar-label { fill: var(--text-sub); font-size: 8px; font-weight: bold; }
+        .radar-value { fill: var(--neon-blue); font-size: 8px; font-weight: bold; }
         
-        .stat-info { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.8rem; font-weight: 500;}
-        .progress-bg { height: 6px; background: #2a2a2a; border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
-        .progress-fill { height: 100%; background: var(--neon-blue); box-shadow: 0 0 10px var(--neon-blue); transition: width 1s; width: 0%; }
+        .stat-info { display: flex; justify-content: space-between; margin-bottom: 2px; font-size: 0.75rem; font-weight: 500;}
+        .progress-bg { height: 4px; background: #2a2a2a; border-radius: 4px; overflow: hidden; margin-bottom: 8px; }
+        .progress-fill { height: 100%; background: var(--neon-blue); box-shadow: 0 0 5px var(--neon-blue); transition: width 1s; width: 0%; }
         [data-theme="light"] .progress-bg { background: #e0e0e0; }
-        .pending-stat { color: var(--neon-gold); font-size: 0.75rem; margin-left: 5px; font-weight: bold; }
+        .pending-stat { color: var(--neon-gold); font-size: 0.7rem; margin-left: 5px; font-weight: bold; }
 
-        .quest-list-wrapper { max-height: 400px; overflow-y: auto; padding-right: 5px; }
-        .quest-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 10px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: 0.2s; border-radius: 6px; }
+        /* 퀘스트 & 캘린더 */
+        .quest-list-wrapper { max-height: 350px; overflow-y: auto; padding-right: 5px; scrollbar-width: none; }
+        .quest-list-wrapper::-webkit-scrollbar { display: none; }
+        .quest-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--border-color); cursor: pointer; border-radius: 6px; }
         .quest-row:last-child { border-bottom: none; }
-        .quest-stat-tag { font-size: 0.65rem; font-weight: bold; padding: 2px 5px; border-radius: 3px; margin-right: 8px; border: 1px solid var(--neon-blue); color: var(--neon-blue); }
-        .quest-title { font-size: 0.9rem; font-weight: bold; margin-bottom: 3px; display: flex; align-items: center; }
-        .quest-desc { font-size: 0.75rem; color: var(--text-sub); margin-left: 35px; }
-        .quest-checkbox { width: 20px; height: 20px; border: 2px solid var(--neon-blue); border-radius: 50%; display: flex; justify-content: center; align-items: center; transition: 0.3s; }
+        .quest-stat-tag { font-size: 0.6rem; font-weight: bold; padding: 2px 4px; border-radius: 3px; margin-right: 6px; border: 1px solid var(--neon-blue); color: var(--neon-blue); }
+        .quest-title { font-size: 0.85rem; font-weight: bold; margin-bottom: 2px; display: flex; align-items: center; }
+        .quest-desc { font-size: 0.7rem; color: var(--text-sub); margin-left: 32px; }
+        .quest-checkbox { width: 18px; height: 18px; border: 2px solid var(--neon-blue); border-radius: 50%; display: flex; justify-content: center; align-items: center; transition: 0.2s; }
         .quest-row.done { opacity: 0.5; }
         .quest-row.done .quest-title { text-decoration: line-through; }
         .quest-row.done .quest-checkbox { background: var(--neon-gold); border-color: var(--neon-gold); }
-        .quest-row.done .quest-checkbox::after { content: "✓"; color: #000; font-size: 14px; font-weight: bold; }
+        .quest-row.done .quest-checkbox::after { content: "✓"; color: #000; font-size: 12px; font-weight: bold; }
 
-        .calendar-wrapper { margin-top: 10px; }
-        .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 0.9rem; font-weight: bold; color: var(--neon-blue); }
-        .cal-grid { display: flex; justify-content: space-between; gap: 5px; }
-        .cal-day { flex: 1; text-align: center; padding: 10px 0; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid var(--border-color); }
-        .cal-day.today { background: rgba(0, 217, 255, 0.1); border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0, 217, 255, 0.2); }
-        .cal-name { font-size: 0.65rem; color: var(--text-sub); text-transform: uppercase; margin-bottom: 3px; }
-        .cal-date { font-size: 1.1rem; font-weight: 900; color: var(--text-main); }
-        .cal-score { font-size: 0.7rem; color: var(--neon-gold); margin-top: 5px; font-weight: bold; }
+        .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.85rem; font-weight: bold; color: var(--neon-blue); }
+        .cal-grid { display: flex; justify-content: space-between; gap: 4px; }
+        .cal-day { flex: 1; text-align: center; padding: 8px 0; background: rgba(255,255,255,0.02); border-radius: 6px; border: 1px solid var(--border-color); }
+        .cal-day.today { background: rgba(0, 217, 255, 0.1); border-color: var(--neon-blue); }
+        .cal-name { font-size: 0.6rem; color: var(--text-sub); margin-bottom: 2px; }
+        .cal-date { font-size: 1rem; font-weight: bold; color: var(--text-main); }
+        .cal-score { font-size: 0.65rem; color: var(--neon-gold); margin-top: 3px; }
 
-        .dungeon-banner { border: 1px solid var(--neon-red); background: rgba(255, 60, 60, 0.05); text-align: center; animation: pulse 2s infinite; }
-        @keyframes pulse { 50% { border-color: rgba(255, 60, 60, 0.3); } }
-        .map-container { width: 100%; height: 200px; border-radius: 8px; overflow: hidden; margin-bottom: 15px; border: 1px solid var(--border-color); }
+        /* 던전, 소셜, 설정 */
+        .dungeon-banner { border: 1px solid var(--neon-red); background: rgba(255, 60, 60, 0.05); text-align: center; }
+        .map-container { width: 100%; height: 180px; border-radius: 6px; overflow: hidden; margin-bottom: 12px; border: 1px solid var(--border-color); }
         .map-container iframe { width: 100%; height: 100%; border: none; }
         
-        .social-header { display: flex; gap: 10px; margin-bottom: 15px; }
-        .social-tab-btn { flex: 1; padding: 10px; background: transparent; border: 1px solid var(--border-color); color: var(--text-sub); border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .social-header { display: flex; gap: 8px; margin-bottom: 12px; }
+        .social-tab-btn { flex: 1; padding: 8px; background: transparent; border: 1px solid var(--border-color); color: var(--text-sub); border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: bold; }
         .social-tab-btn.active { background: rgba(0, 217, 255, 0.1); border-color: var(--neon-blue); color: var(--neon-blue); }
-        .rank-tabs { display: flex; gap: 6px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; -ms-overflow-style: none; }
+        .rank-tabs { display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
         .rank-tabs::-webkit-scrollbar { display: none; }
-        .rank-tab-btn { white-space: nowrap; padding: 6px 12px; font-size: 0.75rem; background: transparent; border: 1px solid var(--border-color); color: var(--text-sub); border-radius: 20px; cursor: pointer; transition: 0.2s; flex-shrink: 0;}
+        .rank-tab-btn { white-space: nowrap; padding: 5px 10px; font-size: 0.7rem; background: transparent; border: 1px solid var(--border-color); color: var(--text-sub); border-radius: 20px; }
         .rank-tab-btn.active { background: var(--neon-blue); color: #fff; border-color: var(--neon-blue); font-weight: bold;}
-        .user-list { display: flex; flex-direction: column; gap: 10px; }
-        .user-card { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; transition: 0.3s; }
+        .user-card { display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 8px; }
         .user-card.my-rank { border-color: var(--neon-gold); background: rgba(255, 204, 0, 0.05); }
-        .user-info { flex-grow: 1; margin-left: 12px; }
-        .user-score { font-weight: 900; color: var(--neon-blue); font-size: 1.1rem; text-align: right; margin-right: 15px; }
-        .btn-friend { padding: 5px 10px; font-size: 0.7rem; font-weight: bold; background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue); border-radius: 4px; cursor: pointer; transition: 0.2s; }
+        .user-info { flex-grow: 1; margin-left: 10px; }
+        .user-score { font-weight: 900; color: var(--neon-blue); font-size: 1rem; text-align: right; margin-right: 12px; }
+        .btn-friend { padding: 4px 8px; font-size: 0.65rem; font-weight: bold; background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue); border-radius: 4px; }
         .btn-friend.added { background: var(--neon-blue); color: #fff; }
 
-        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; }
+        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; }
         .setting-row:last-child { border-bottom: none; }
-        .custom-select { background: transparent; color: var(--text-main); border: 1px solid var(--neon-blue); padding: 6px 10px; border-radius: 6px; font-family: inherit; font-size: 0.85rem; outline: none; cursor: pointer; -webkit-appearance: none; appearance: none; text-align: center; min-width: 90px; }
+        .custom-select { background: transparent; color: var(--text-main); border: 1px solid var(--neon-blue); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; outline: none; }
         .custom-select option { background: var(--bg-dark); color: var(--text-main); }
         [data-theme="light"] .custom-select { border-color: var(--border-color); color: var(--text-main); }
         [data-theme="light"] .custom-select option { background: #ffffff; color: #1a1a1a; }
-        .switch { position: relative; width: 44px; height: 24px; }
+        
+        .switch { position: relative; width: 40px; height: 22px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #ccc; border-radius: 24px; transition: .4s; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: .4s; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #ccc; border-radius: 22px; transition: .3s; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: .3s; }
         input:checked + .slider { background: var(--neon-blue); }
-        input:checked + .slider:before { transform: translateX(20px); }
+        input:checked + .slider:before { transform: translateX(18px); }
 
-        nav { position: fixed; bottom: env(safe-area-inset-bottom); width: 100%; height: 70px; background: var(--nav-bg); display: flex; border-top: 1px solid var(--border-color); z-index: 10; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 0.65rem; color: var(--text-sub); cursor: pointer; transition: color 0.2s; }
+        /* 하단 네비게이션 */
+        nav { position: fixed; bottom: env(safe-area-inset-bottom); width: 100%; height: 65px; background: var(--nav-bg); display: flex; border-top: 1px solid var(--border-color); z-index: 10; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 0.6rem; color: var(--text-sub); cursor: pointer; }
         .nav-item.active { color: var(--neon-blue); }
-        .nav-icon { font-size: 1.3rem; margin-bottom: 4px; }
+        .nav-icon { font-size: 1.2rem; margin-bottom: 3px; }
 
+        /* 모달 */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; display: none; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
-        .modal-content { background: var(--panel-bg); border: 1px solid var(--neon-blue); padding: 25px; border-radius: 12px; width: 85%; max-height: 70vh; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0, 217, 255, 0.2); }
-        .modal-header { font-size: 1.2rem; font-weight: bold; color: var(--neon-blue); margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .modal-content { background: var(--panel-bg); border: 1px solid var(--neon-blue); padding: 20px; border-radius: 10px; width: 85%; max-height: 70vh; display: flex; flex-direction: column; }
+        .modal-header { font-size: 1.1rem; font-weight: bold; color: var(--neon-blue); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
         .modal-close { background: none; border: none; color: var(--text-sub); font-size: 1.5rem; cursor: pointer; }
         .history-list { overflow-y: auto; flex-grow: 1; }
-        .history-item { padding: 12px 0; border-bottom: 1px dashed var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .history-item { padding: 10px 0; border-bottom: 1px dashed var(--border-color); display: flex; justify-content: space-between; align-items: center; }
         .history-item:last-child { border-bottom: none; }
-        .hist-lvl { color: var(--neon-gold); font-weight: bold; font-size: 0.8rem; }
-        .hist-title { color: var(--text-main); font-size: 0.95rem; font-weight: bold; }
+        .hist-lvl { color: var(--neon-gold); font-weight: bold; font-size: 0.75rem; }
+        .hist-title { color: var(--text-main); font-size: 0.9rem; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -192,18 +183,16 @@
             
             <input type="email" class="login-input" id="login-email" data-i18n-placeholder="ph_email">
             <input type="password" class="login-input" id="login-pw" data-i18n-placeholder="ph_pw">
-            <div id="pw-hint" class="hint-text" data-i18n="pw_req_hint">※ 8자리 이상, 대문자 1개, 특수문자 2개 이상 포함</div>
-            
+            <div id="pw-hint" class="hint-text" data-i18n="pw_req_hint">※ 8자리 이상, 대문자 1개 이상, 특수문자 2개 이상 포함</div>
             <input type="password" class="login-input" id="login-pw-confirm" style="display: none;" data-i18n-placeholder="ph_pw_conf">
             
-            <div id="disclaimer-box" class="disclaimer-text" data-i18n="disclaimer_txt">
+            <div id="disclaimer-box" class="disclaimer-text" style="display: none;" data-i18n="disclaimer_txt">
                 ※ 가입 시 이용약관 및 면책사항에 동의하는 것으로 간주됩니다. 본 앱은 의료 보조 기구가 아니며, 퀘스트 수행 중 발생하는 신체적 부상이나 손해에 대해 일절 책임지지 않습니다.
             </div>
 
-            <button class="btn-primary" style="margin-bottom: 15px;" onclick="simulateLogin()" id="btn-login-submit" data-i18n="btn_login_submit">시스템 접속</button>
-            
+            <button class="btn-primary" style="margin-bottom: 10px;" onclick="simulateLogin()" id="btn-login-submit" data-i18n="btn_login_submit">시스템 접속</button>
             <button class="btn-primary btn-google" onclick="simulateGoogleLogin()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                     <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.16v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
                     <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.16C1.43 8.55 1 10.22 1 12s.43 3.45 1.16 4.93l3.68-2.84z" fill="#FBBC05"/>
@@ -211,7 +200,6 @@
                 </svg>
                 <span data-i18n="btn_google_login">Google 계정으로 계속</span>
             </button>
-            
             <div class="login-toggle" onclick="toggleAuthMode()" id="auth-toggle-text" data-i18n="auth_toggle_signup">계정이 없으신가요? 회원가입</div>
         </div>
     </div>
@@ -224,104 +212,88 @@
 
         <main>
             <section id="status" class="view-section active">
-                <div class="profile-box">
-                    <div class="profile-image-container">
-                        <img id="profilePreview" class="profile-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E">
-                        <label for="imageUpload" class="upload-overlay">📷</label>
-                        <input type="file" id="imageUpload" accept="image/*" onchange="loadProfileImage(event)">
-                    </div>
-                    <div>
-                        <div class="title-badge" id="prof-title-badge">신규 각성자</div>
-                        <div class="name-container">
-                            <div style="font-size: 1.2rem; font-weight: bold;" id="prof-name" data-i18n="prof_name">플레이어 (나)</div>
-                            <button class="btn-edit-name" onclick="changePlayerName()">✏️</button>
+                <div class="system-card">
+                    <div class="profile-compact-header">
+                        <div class="profile-box">
+                            <div class="profile-image-container">
+                                <img class="profile-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E" alt="Profile">
+                            </div>
+                            <div>
+                                <div class="title-badge" id="prof-title-badge" onclick="openTitleModal()" style="cursor:pointer;">신규 각성자 ℹ️</div>
+                                <div class="name-container">
+                                    <div style="font-size: 1rem; font-weight: bold;" id="prof-name" data-i18n="prof_name">플레이어 (나)</div>
+                                    <button class="btn-edit-name" onclick="changePlayerName()">✏️</button>
+                                </div>
+                            </div>
                         </div>
-                        <button class="btn-history" onclick="openTitleModal()" data-i18n="btn_hist">칭호 이력 조회</button>
-                    </div>
-                </div>
-
-                <div class="levelup-panel">
-                    <div>
-                        <div style="font-size: 0.75rem; color: var(--text-sub);" data-i18n="avail_pts">보유 포인트</div>
-                        <div style="font-size: 1.6rem; font-weight: 900; color: var(--neon-gold);"><span id="display-pts">0</span><span style="font-size: 1rem;"> P</span></div>
-                    </div>
-                    <div style="text-align: right;">
-                        <button id="btn-levelup" class="btn-primary" style="width: auto; padding: 10px 20px; font-size: 0.9rem;" onclick="processLevelUp()" data-i18n="btn_lvlup">레벨 업</button>
-                        <div style="font-size: 0.7rem; color: var(--text-sub); margin-top: 5px;">
-                            <span data-i18n="req_pts">요구량:</span> <span id="display-req-pts">100</span> P
+                        <div class="compact-score-box">
+                            <div style="font-size: 0.65rem; color: var(--text-sub);" data-i18n="tot_score">종합 스코어</div>
+                            <div class="compact-score-val" id="totalScore">0</div>
                         </div>
                     </div>
-                </div>
 
-                <div class="stat-summary">
-                    <div style="font-size: 0.8rem; color: var(--text-sub);" data-i18n="tot_score">종합 스코어</div>
-                    <div style="font-size: 2.2rem; font-weight: 900; color: var(--text-main); margin-top: 5px;" id="totalScore">0 <span style="font-size: 1rem; color: var(--neon-blue);">pts</span></div>
+                    <div class="levelup-panel-compact">
+                        <div>
+                            <div style="font-size: 0.65rem; color: var(--text-sub);" data-i18n="avail_pts">보유 포인트</div>
+                            <div style="font-size: 1.3rem; font-weight: 900; color: var(--neon-gold);"><span id="display-pts">0</span><span style="font-size: 0.8rem;"> P</span></div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="font-size: 0.6rem; color: var(--text-sub); text-align: right;">
+                                <span data-i18n="req_pts">요구량:</span><br><span id="display-req-pts">100</span> P
+                            </div>
+                            <button id="btn-levelup" class="btn-primary btn-levelup-sm" onclick="processLevelUp()" data-i18n="btn_lvlup">레벨 업</button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="system-card">
-                    <h2 data-i18n="radar_title">Stat Radar</h2>
-                    <div style="font-size: 0.7rem; color:var(--neon-gold); text-align:right;" data-i18n="stat_hint">※ 대기 스탯은 레벨업 시 반영됩니다.</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 5px;">
+                        <h2 data-i18n="radar_title" style="margin:0;">Stat Radar</h2>
+                        <span style="font-size: 0.65rem; color:var(--neon-gold);" data-i18n="stat_hint">※ 대기 스탯은 레벨업 시 반영됨</span>
+                    </div>
                     
                     <div class="radar-chart-container">
                         <svg class="radar-chart" viewBox="0 0 100 100" id="radarSvg">
-                            <g id="radarGrid"></g>
-                            <g id="radarAxes"></g>
+                            <g id="radarGrid"></g><g id="radarAxes"></g>
                             <polygon id="playerPolygon" class="radar-polygon" points="" />
-                            <g id="radarPoints"></g>
-                            <g id="radarLabels"></g>
+                            <g id="radarPoints"></g><g id="radarLabels"></g>
                         </svg>
                     </div>
                     
-                    <div style="margin-top: 10px;">
-                        <div class="stat-info">
-                            <span data-i18n="bar_str">근력 (물리/운동)</span>
-                            <div><span style="color:var(--neon-blue)" id="barVal_str">0</span><span class="pending-stat" id="pendVal_str"></span></div>
-                        </div>
+                    <div>
+                        <div class="stat-info"><span data-i18n="bar_str">근력 (물리/운동)</span><div><span style="color:var(--neon-blue)" id="barVal_str">0</span><span class="pending-stat" id="pendVal_str"></span></div></div>
                         <div class="progress-bg"><div class="progress-fill" id="barFill_str"></div></div>
                         
-                        <div class="stat-info">
-                            <span data-i18n="bar_int">지능 (학습/인지)</span>
-                            <div><span style="color:var(--neon-blue)" id="barVal_int">0</span><span class="pending-stat" id="pendVal_int"></span></div>
-                        </div>
+                        <div class="stat-info"><span data-i18n="bar_int">지능 (학습/인지)</span><div><span style="color:var(--neon-blue)" id="barVal_int">0</span><span class="pending-stat" id="pendVal_int"></span></div></div>
                         <div class="progress-bg"><div class="progress-fill" id="barFill_int"></div></div>
                         
-                        <div class="stat-info">
-                            <span data-i18n="bar_cha">매력 (인맥/소통)</span>
-                            <div><span style="color:var(--neon-blue)" id="barVal_cha">0</span><span class="pending-stat" id="pendVal_cha"></span></div>
-                        </div>
+                        <div class="stat-info"><span data-i18n="bar_cha">매력 (인맥/소통)</span><div><span style="color:var(--neon-blue)" id="barVal_cha">0</span><span class="pending-stat" id="pendVal_cha"></span></div></div>
                         <div class="progress-bg"><div class="progress-fill" id="barFill_cha"></div></div>
                         
-                        <div class="stat-info">
-                            <span data-i18n="bar_vit">체력 (수면/회복)</span>
-                            <div><span style="color:var(--neon-blue)" id="barVal_vit">0</span><span class="pending-stat" id="pendVal_vit"></span></div>
-                        </div>
+                        <div class="stat-info"><span data-i18n="bar_vit">체력 (수면/회복)</span><div><span style="color:var(--neon-blue)" id="barVal_vit">0</span><span class="pending-stat" id="pendVal_vit"></span></div></div>
                         <div class="progress-bg"><div class="progress-fill" id="barFill_vit"></div></div>
                         
-                        <div class="stat-info">
-                            <span data-i18n="bar_wlth">재력 (자본/투자)</span>
-                            <div><span style="color:var(--neon-blue)" id="barVal_wlth">0</span><span class="pending-stat" id="pendVal_wlth"></span></div>
-                        </div>
+                        <div class="stat-info"><span data-i18n="bar_wlth">재력 (자본/투자)</span><div><span style="color:var(--neon-blue)" id="barVal_wlth">0</span><span class="pending-stat" id="pendVal_wlth"></span></div></div>
                         <div class="progress-bg"><div class="progress-fill" id="barFill_wlth"></div></div>
                         
-                        <div class="stat-info">
-                            <span data-i18n="bar_agi">민첩 (시간/효율)</span>
-                            <div><span style="color:var(--neon-blue)" id="barVal_agi">0</span><span class="pending-stat" id="pendVal_agi"></span></div>
-                        </div>
+                        <div class="stat-info"><span data-i18n="bar_agi">민첩 (시간/효율)</span><div><span style="color:var(--neon-blue)" id="barVal_agi">0</span><span class="pending-stat" id="pendVal_agi"></span></div></div>
                         <div class="progress-bg"><div class="progress-fill" id="barFill_agi"></div></div>
                     </div>
                 </div>
             </section>
 
             <section id="quests" class="view-section">
-                <h2 data-i18n="quest_title">Daily Quests</h2>
-                <div style="font-size:0.75rem; color:var(--neon-gold); text-align:right; margin-bottom:10px;" data-i18n="quest_hint">※ 퀘스트 완료 시 +20P 및 스탯 +0.5 대기 적립</div>
-                <div class="system-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <h2 data-i18n="quest_title" style="margin:0;">Daily Quests</h2>
+                    <span style="font-size:0.7rem; color:var(--neon-gold);" data-i18n="quest_hint">※ 완료 시 +20P & 스탯 +0.5</span>
+                </div>
+                <div class="system-card" style="padding:10px;">
                     <div class="quest-list-wrapper" id="quest-list-container"></div>
                 </div>
                 <div class="system-card calendar-wrapper">
                     <div class="cal-header">
                         <span data-i18n="cal_title">주간 진척도</span>
-                        <span style="font-size:0.8rem; color:var(--text-sub);" id="cal-month"></span>
+                        <span style="font-size:0.75rem; color:var(--text-sub);" id="cal-month"></span>
                     </div>
                     <div class="cal-grid" id="calendar-grid"></div>
                 </div>
@@ -330,13 +302,13 @@
             <section id="dungeon" class="view-section">
                 <h2 data-i18n="raid_title">Local Raid</h2>
                 <div class="system-card dungeon-banner">
-                    <h3 style="color: var(--neon-red); margin: 0 0 10px 0; font-size:1.2rem;" data-i18n="raid_boss">⚠️ 서울 강남 연합 보스 출현</h3>
+                    <h3 style="color: var(--neon-red); margin: 0 0 10px 0; font-size:1.1rem;" data-i18n="raid_boss">⚠️ 서울 강남 연합 보스 출현</h3>
                     <div class="map-container">
                         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3164.8872958213665!2d127.02498261564757!3d37.49805097981048!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca1598c471015%3A0x6b0d1e57c631a3!2z6rCV64Ko7Jet!5e0!3m2!1sko!2skr!4v1690000000000!5m2!1sko!2skr" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
-                    <p style="font-size: 0.85rem; color: var(--text-main); margin-bottom: 5px;" data-i18n="raid_desc1">"퇴근길의 유혹자"가 감지되었습니다.</p>
-                    <p style="font-size: 0.75rem; color: var(--text-sub);" data-i18n="raid_desc2">근처 헌터들과 연합하여 2시간 내<br>합산 50km를 달성하고 전리품을 획득하세요.</p>
-                    <div style="font-size: 0.8rem; margin: 15px 0; font-weight:bold;"><span data-i18n="raid_part">참여 인원: </span><span style="color:var(--neon-blue)">4</span> / 10</div>
+                    <p style="font-size: 0.8rem; color: var(--text-main); margin-bottom: 5px;" data-i18n="raid_desc1">"퇴근길의 유혹자"가 감지되었습니다.</p>
+                    <p style="font-size: 0.7rem; color: var(--text-sub);" data-i18n="raid_desc2">근처 헌터들과 연합하여 2시간 내<br>합산 50km를 달성하고 전리품을 획득하세요.</p>
+                    <div style="font-size: 0.8rem; margin: 12px 0; font-weight:bold;"><span data-i18n="raid_part">참여 인원: </span><span style="color:var(--neon-blue)">4</span> / 10</div>
                     <button class="btn-primary" style="background: var(--neon-red);" data-i18n="raid_btn">레이드 입장하기</button>
                 </div>
             </section>
@@ -379,13 +351,13 @@
                         <span data-i18n="set_gps">앱 실행 시 현위치 탐색</span>
                         <label class="switch"><input type="checkbox" id="gps-toggle" onchange="toggleGPS()"><span class="slider"></span></label>
                     </div>
-                    <div class="setting-row" id="gps-status" style="font-size:0.75rem; color:var(--text-sub); display:none; justify-content:flex-end; padding-top:0;"></div>
+                    <div class="setting-row" id="gps-status" style="font-size:0.7rem; color:var(--text-sub); display:none; justify-content:flex-end; padding-top:0;"></div>
                     
                     <div class="setting-row">
                         <span data-i18n="set_sync">건강 앱 동기화</span>
                         <label class="switch"><input type="checkbox" id="sync-toggle" onchange="toggleHealthSync()"><span class="slider"></span></label>
                     </div>
-                    <div class="setting-row" id="sync-status" style="font-size:0.75rem; color:var(--neon-blue); display:none; justify-content:flex-end; padding-top:0; text-align:right;"></div>
+                    <div class="setting-row" id="sync-status" style="font-size:0.7rem; color:var(--neon-blue); display:none; justify-content:flex-end; padding-top:0; text-align:right;"></div>
                 </div>
                 <button class="btn-primary" style="background: #222; border: 1px solid var(--border-color); color: var(--neon-red);" onclick="logout()" data-i18n="set_logout">로그아웃</button>
             </section>
@@ -419,7 +391,7 @@
             if (isLoggedIn === 'true') {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('app-container').style.display = 'flex';
-                changeTheme(); loadPlayerName(); changeLanguage('ko'); renderCalendar(); updatePointUI();
+                changeTheme(); loadPlayerName(); changeLanguage(currentLang); renderCalendar(); updatePointUI();
                 drawRadarChart(); 
             } else {
                 document.getElementById('login-screen').style.display = 'flex';
@@ -456,39 +428,23 @@
             const pw = document.getElementById('login-pw').value;
             const pwConfirm = document.getElementById('login-pw-confirm').value;
 
-            // 1. 공백 체크
-            if(!email || !pw) { 
-                alert(i18n[currentLang].login_err_empty); 
-                return; 
-            }
+            // 공백 체크
+            if(!email || !pw) { alert(i18n[currentLang].login_err_empty); return; }
 
-            // 2. 이메일 정규식 검증
+            // 이메일 정규식 검증
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if(!emailRegex.test(email)) {
-                alert(i18n[currentLang].login_err_email);
-                return;
-            }
+            if(!emailRegex.test(email)) { alert(i18n[currentLang].login_err_email); return; }
 
-            // 3. 회원가입 시 비밀번호 유효성 검증
+            // 회원가입 시 비밀번호 유효성 검증
             if(!isLoginMode) {
-                // 대문자 확인
                 const hasUppercase = /[A-Z]/.test(pw);
-                // 특수문자 개수 확인 (알파벳, 숫자가 아닌 문자의 개수 추출)
                 const specialChars = pw.match(/[^a-zA-Z0-9]/g) || [];
-                
                 if(pw.length < 8 || !hasUppercase || specialChars.length < 2) {
-                    alert(i18n[currentLang].login_err_pw_req);
-                    return;
+                    alert(i18n[currentLang].login_err_pw_req); return;
                 }
-
-                // 비밀번호 확인 일치 여부
-                if(pw !== pwConfirm) {
-                    alert(i18n[currentLang].pw_mismatch);
-                    return;
-                }
+                if(pw !== pwConfirm) { alert(i18n[currentLang].pw_mismatch); return; }
             }
 
-            // 인증 통과
             localStorage.setItem('isLoggedIn', 'true');
             checkLoginStatus();
         }
@@ -515,23 +471,23 @@
             checkLoginStatus();
         }
 
-        // --- 1. i18n Dictionary ---
+        // --- 1. 다국어 사전 (전체 메뉴 및 Placeholder 포함) ---
         const i18n = {
             ko: {
                 login_desc: "시스템에 접속하여 현실을 게임처럼.", btn_login_submit: "시스템 접속 (로그인)", btn_signup_submit: "새 플레이어 등록 (회원가입)", 
                 btn_google_login: "Google로 시작", auth_toggle_signup: "계정이 없으신가요? 회원가입", auth_toggle_login: "이미 계정이 있으신가요? 로그인",
                 ph_email: "이메일 (Email)", ph_pw: "비밀번호 (Password)", ph_pw_conf: "비밀번호 확인 (Confirm Password)",
                 pw_req_hint: "※ 비밀번호: 8자리 이상, 대문자 1개 이상, 특수문자 2개 이상 포함",
-                disclaimer_txt: "※ 가입 시 이용약관 및 면책사항에 동의하는 것으로 간주됩니다. 본 앱은 의료 보조 기구가 아니며, 퀘스트 수행 중 발생하는 신체적 부상이나 손해에 대해 일절 책임지지 않습니다.",
+                disclaimer_txt: "※ 가입 시 이용약관 및 면책사항에 동의하는 것으로 간주됩니다. 본 앱은 건강 보조 목적이며, 퀘스트 수행 중 발생하는 신체적 부상이나 손해에 대해 일절 책임지지 않습니다.",
                 login_err_empty: "이메일과 비밀번호를 모두 입력해주세요.", login_err_email: "유효한 이메일 주소를 입력해주세요.", 
                 login_err_pw_req: "비밀번호 조건(8자리 이상, 대문자 1개 이상, 특수문자 2개 이상)을 충족해주세요.", pw_mismatch: "비밀번호가 일치하지 않습니다.",
                 
                 nav_status: "상태창", nav_quest: "퀘스트", nav_dungeon: "던전", nav_social: "소셜", nav_settings: "설정",
                 prof_name: "플레이어 (나)", btn_hist: "칭호 이력 조회", avail_pts: "보유 포인트", btn_lvlup: "레벨 업", req_pts: "요구량:",
-                tot_score: "종합 스코어", radar_title: "Stat Radar", stat_hint: "※ 대기 스탯은 레벨업 시 일괄 반영됩니다.",
+                tot_score: "종합 스코어", radar_title: "Stat Radar", stat_hint: "※ 대기 스탯은 레벨업 시 반영됨",
                 str: "근력", int: "지능", cha: "매력", vit: "체력", wlth: "재력", agi: "민첩",
                 bar_str: "근력 (물리/운동)", bar_int: "지능 (학습/인지)", bar_cha: "매력 (인맥/소통)", bar_vit: "체력 (수면/회복)", bar_wlth: "재력 (자본/투자)", bar_agi: "민첩 (시간/효율)",
-                quest_title: "Daily Quests", quest_hint: "※ 퀘스트 완료 시 +20P 및 스탯 +0.5 대기 적립", cal_title: "주간 진척도",
+                quest_title: "Daily Quests", quest_hint: "※ 완료 시 +20P & 스탯 +0.5 대기 적립", cal_title: "주간 진척도",
                 raid_title: "Local Raid", raid_boss: "⚠️ 서울 강남 연합 보스 출현", raid_desc1: '"퇴근길의 유혹자"가 감지되었습니다.', raid_desc2: "근처 헌터들과 연합하여 2시간 내<br>합산 50km를 달성하고 전리품을 획득하세요.", raid_part: "참여 인원: ", raid_btn: "레이드 입장하기",
                 soc_global: "🏆 글로벌 랭킹", soc_friend: "👥 내 친구", sort_tot: "종합스코어", sort_str: "근력", sort_int: "지능", sort_cha: "매력", sort_vit: "체력", sort_wlth: "재력", sort_agi: "민첩",
                 set_title: "System Settings", set_lang: "언어 (Language)", set_theme: "라이트 모드", set_push: "푸시 알림 수신", set_gps: "앱 실행 시 현위치 탐색", set_sync: "건강 앱 동기화", set_logout: "로그아웃",
@@ -543,7 +499,7 @@
                 btn_google_login: "Continue with Google", auth_toggle_signup: "No account? Sign Up", auth_toggle_login: "Already have an account? Login",
                 ph_email: "Email Address", ph_pw: "Password", ph_pw_conf: "Confirm Password",
                 pw_req_hint: "※ Password: 8+ chars, 1+ uppercase, 2+ special chars",
-                disclaimer_txt: "※ By signing up, you agree to our Terms and Disclaimer. This app does not provide medical advice and is not liable for any injuries during quests.",
+                disclaimer_txt: "※ By signing up, you agree to our Disclaimer. This app does not provide medical advice and is not liable for any injuries during quests.",
                 login_err_empty: "Please enter your email and password.", login_err_email: "Please enter a valid email address.",
                 login_err_pw_req: "Password must be 8+ characters with at least 1 uppercase and 2 special characters.", pw_mismatch: "Passwords do not match.",
                 
@@ -551,7 +507,7 @@
                 prof_name: "Player (Me)", btn_hist: "Title History", avail_pts: "Available Pts", btn_lvlup: "Level Up", req_pts: "Required:",
                 tot_score: "Total Score", radar_title: "Stat Radar", stat_hint: "※ Pending stats are applied upon Level Up.",
                 str: "STR", int: "INT", cha: "CHA", vit: "VIT", wlth: "WLTH", agi: "AGI",
-                bar_str: "STR (Physical/Workout)", bar_int: "INT (Study/Cognition)", bar_cha: "CHA (Network/Comm)", bar_vit: "VIT (Sleep/Recovery)", bar_wlth: "WLTH (Capital/Invest)", bar_agi: "AGI (Time/Efficiency)",
+                bar_str: "STR (Physical)", bar_int: "INT (Cognitive)", bar_cha: "CHA (Social)", bar_vit: "VIT (Recovery)", bar_wlth: "WLTH (Capital)", bar_agi: "AGI (Efficiency)",
                 quest_title: "Daily Quests", quest_hint: "※ Earn +20P & +0.5 pending stat per quest", cal_title: "Weekly Progress",
                 raid_title: "Local Raid", raid_boss: "⚠️ Gangnam Alliance Boss", raid_desc1: '"Predator of Laziness" detected.', raid_desc2: "Unite with nearby hunters to achieve<br>50km in 2 hours and get loot.", raid_part: "Participants: ", raid_btn: "Enter Raid",
                 soc_global: "🏆 Global Rank", soc_friend: "👥 My Friends", sort_tot: "Total", sort_str: "STR", sort_int: "INT", sort_cha: "CHA", sort_vit: "VIT", sort_wlth: "WLTH", sort_agi: "AGI",
@@ -563,8 +519,8 @@
                 login_desc: "システムに接続し、現実をゲームのように。", btn_login_submit: "システム接続 (ログイン)", btn_signup_submit: "新規プレイヤー登録", 
                 btn_google_login: "Googleで続行", auth_toggle_signup: "アカウントがありませんか？ 新規登録", auth_toggle_login: "すでにアカウントをお持ちですか？ ログイン",
                 ph_email: "メールアドレス", ph_pw: "パスワード", ph_pw_conf: "パスワード (確認用)",
-                pw_req_hint: "※ パスワード: 8文字以上、大文字1つ、特殊文字2つ以上",
-                disclaimer_txt: "※ 登録により利用規約と免責事項に同意したとみなされます。本アプリは医療的助言を提供するものではなく、クエスト中の怪我等について一切の責任を負いません。",
+                pw_req_hint: "※ パスワード: 8文字以上、大文字1つ以上、特殊文字2つ以上",
+                disclaimer_txt: "※ 登録により免責事項に同意したとみなされます。本アプリは医療的助言を提供するものではなく、クエスト中の怪我等について一切の責任を負いません。",
                 login_err_empty: "メールアドレスとパスワードを入力してください。", login_err_email: "有効なメールアドレスを入力してください。",
                 login_err_pw_req: "パスワードの条件(8文字以上、大文字1つ以上、特殊文字2つ以上)を満たしてください。", pw_mismatch: "パスワードが一致しません。",
 
@@ -572,8 +528,8 @@
                 prof_name: "プレイヤー (私)", btn_hist: "称号履歴", avail_pts: "保有ポイント", btn_lvlup: "レベルUP", req_pts: "必要量:",
                 tot_score: "総合スコア", radar_title: "ステータスレーダー", stat_hint: "※ 待機ステータスはレベルUP時に反映されます。",
                 str: "筋力", int: "知能", cha: "魅力", vit: "体力", wlth: "財力", agi: "敏捷",
-                bar_str: "筋力 (物理/運動)", bar_int: "知能 (学習/認知)", bar_cha: "魅力 (人脈/疎通)", bar_vit: "体力 (睡眠/回復)", bar_wlth: "財力 (資本/投資)", bar_agi: "敏捷 (時間/効率)",
-                quest_title: "デイリークエスト", quest_hint: "※ クエスト完了で +20P & 待機ステータス+0.5", cal_title: "週間進捗度",
+                bar_str: "筋力 (運動)", bar_int: "知能 (認知)", bar_cha: "魅力 (人脈)", bar_vit: "体力 (回復)", bar_wlth: "財力 (資本)", bar_agi: "敏捷 (効率)",
+                quest_title: "デイリークエスト", quest_hint: "※ 完了で +20P & 待機ステータス+0.5", cal_title: "週間進捗度",
                 raid_title: "ローカルレイド", raid_boss: "⚠️ 江南連合ボス出現", raid_desc1: "「怠惰の捕食者」感知。", raid_desc2: "近くのハンターと連合して2時間以内に<br>合計50kmを達成し戦利品を獲得せよ。", raid_part: "参加人数: ", raid_btn: "入場する",
                 soc_global: "🏆 グローバルランク", soc_friend: "👥 マイフレンド", sort_tot: "総合", sort_str: "筋力", sort_int: "知能", sort_cha: "魅力", sort_vit: "体力", sort_wlth: "財力", sort_agi: "敏捷",
                 set_title: "システム設定", set_lang: "言語 (Language)", set_theme: "ライトモード", set_push: "プッシュ通知受信", set_gps: "起動時の位置情報取得", set_sync: "ヘルスケアアプリ同期", set_logout: "ログアウト",
@@ -591,7 +547,8 @@
             agi: { ko: { pre: ["날쌘", "바람을 가르는", "보이지 않는"], suf: ["표범", "화살", "매"] }, en: { pre: ["Swift", "Wind-cleaving", "Unseen"], suf: ["Panther", "Arrow", "Hawk"] }, ja: { pre: ["素早い", "風を切る", "見えない"], suf: ["ヒョウ", "矢", "鷹"] } }
         };
 
-        // --- 2. 시스템 상태 ---
+        // --- 2. 시스템 상태 (기본값 0 & 대기 스탯) ---
+        let currentLang = 'ko';
         let userLevel = 1;
         let userPoints = 50; 
         
@@ -645,7 +602,7 @@
             if(userPoints >= reqPts) {
                 btn.disabled = false; btn.style.background = "var(--neon-gold)"; btn.style.color = "black"; btn.style.boxShadow = "0 0 15px var(--neon-gold)";
             } else {
-                btn.disabled = true; btn.style.background = "#333"; btn.style.color = "#888"; btn.style.boxShadow = "none";
+                btn.disabled = true; btn.style.background = "#444"; btn.style.color = "#777"; btn.style.boxShadow = "none";
             }
             document.getElementById('prof-title-badge').innerText = titleHistory[titleHistory.length - 1].title[currentLang];
             
@@ -700,6 +657,7 @@
             });
         }
 
+        // 전체 메뉴 및 플레이스홀더 다국어 적용 최적화
         function changeLanguage(langCode) {
             currentLang = langCode;
             document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -711,9 +669,12 @@
                 if (i18n[currentLang][key]) el.setAttribute('placeholder', i18n[currentLang][key]);
             });
 
-            drawRadarChart(); renderUsers(currentSortCriteria); renderQuestList(); updatePointUI();
-            if(document.getElementById('titleModal').style.display === 'flex') renderHistoryModal();
-            loadPlayerName();
+            // 앱이 화면에 떠 있을 때만 차트 렌더링 호출
+            if(document.getElementById('app-container').style.display !== 'none') {
+                drawRadarChart(); renderUsers(currentSortCriteria); renderQuestList(); updatePointUI();
+                if(document.getElementById('titleModal').style.display === 'flex') renderHistoryModal();
+                loadPlayerName();
+            }
         }
 
         function switchTab(tabId, el) {
@@ -734,12 +695,7 @@
             document.head.appendChild(themeMeta);
         }
 
-        function loadProfileImage(event) {
-            const output = document.getElementById('profilePreview');
-            if (event.target.files[0]) output.src = URL.createObjectURL(event.target.files[0]);
-        }
-
-        // --- 4. 레이더 차트 ---
+        // --- 4. 레이더 차트 렌더링 ---
         function drawRadarChart() {
             const centerX = 50, centerY = 50, radius = 33; 
             const angles = []; for(let i=0; i<6; i++) angles.push(-Math.PI / 2 + (i * Math.PI / 3));
@@ -793,8 +749,10 @@
 
                 labelsGroup.appendChild(textName); labelsGroup.appendChild(textVal);
                 
-                document.getElementById(`barVal_${key}`).textContent = val;
-                setTimeout(() => { document.getElementById(`barFill_${key}`).style.width = `${val}%`; }, 100);
+                const barValEl = document.getElementById(`barVal_${key}`);
+                if(barValEl) barValEl.textContent = val;
+                const barFillEl = document.getElementById(`barFill_${key}`);
+                if(barFillEl) setTimeout(() => { barFillEl.style.width = `${val}%`; }, 100);
             }
 
             const playerPolygon = document.getElementById('playerPolygon');
@@ -802,7 +760,7 @@
                 playerPolygon.setAttribute('points', "50,50 50,50 50,50 50,50 50,50 50,50"); 
             }
             setTimeout(() => { playerPolygon.setAttribute('points', dataPoints.trim()); }, 50);
-            document.getElementById('totalScore').innerHTML = `${totalSum} <span style="font-size: 1rem; color: var(--neon-blue);">pts</span>`;
+            document.getElementById('totalScore').innerHTML = `${totalSum}`;
         }
 
         // --- 5. 퀘스트 데이터 & 캘린더 ---
