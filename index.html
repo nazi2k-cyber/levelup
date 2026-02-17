@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>LEVEL UP: REBOOT | Health Sync</title>
+    <title>LEVEL UP: REBOOT | First Principles Master</title>
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         
@@ -29,6 +29,45 @@
             box-sizing: border-box; overflow: hidden; transition: background-color 0.3s, color 0.3s;
         }
 
+        /* --- 1. 로그인 스크린 스타일 --- */
+        #login-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-dark); z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 20px; box-sizing: border-box; transition: background-color 0.3s;
+        }
+        .login-box {
+            width: 100%; max-width: 350px; background: var(--panel-bg);
+            border: 1px solid var(--border-color); border-radius: 12px;
+            padding: 40px 20px; box-shadow: 0 0 25px rgba(0, 217, 255, 0.15);
+            text-align: center; max-height: 90vh; overflow-y: auto;
+        }
+        .login-box::-webkit-scrollbar { display: none; }
+        .login-title { font-size: 1.8rem; font-weight: 900; color: var(--neon-blue); margin-bottom: 5px; letter-spacing: 1px; }
+        .login-sub { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 30px; }
+        .login-input {
+            width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 6px;
+            border: 1px solid var(--border-color); background: rgba(0,0,0,0.3);
+            color: var(--text-main); box-sizing: border-box; outline: none; font-family: 'Pretendard', sans-serif; font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        .login-input:focus { border-color: var(--neon-blue); box-shadow: 0 0 8px rgba(0, 217, 255, 0.3); }
+        [data-theme="light"] .login-input { background: rgba(255,255,255,0.8); }
+        
+        .hint-text { font-size: 0.7rem; color: var(--text-sub); text-align: left; margin-top: -8px; margin-bottom: 12px; padding-left: 5px; display: none; }
+        .disclaimer-text { font-size: 0.65rem; color: #888; text-align: left; margin-bottom: 15px; padding: 0 5px; line-height: 1.3; display: none; }
+        
+        .btn-google { background: #fff; color: #333; border: 1px solid #ddd; display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 10px; }
+        .btn-google:hover { background: #f1f1f1; }
+        .login-toggle { font-size: 0.85rem; color: var(--text-sub); margin-top: 25px; cursor: pointer; text-decoration: underline; transition: color 0.2s; }
+        .login-toggle:hover { color: var(--neon-blue); }
+
+        /* --- 메인 앱 컨테이너 --- */
+        #app-container {
+            display: none; 
+            flex-direction: column; width: 100%; height: 100%;
+        }
+
         header { padding: 15px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--panel-bg); z-index: 10; }
         #sys-title { font-weight: 900; letter-spacing: 1px; font-size: 1.1rem; }
         .level-badge { background: var(--neon-blue); color: #fff; font-weight: bold; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; transition: transform 0.3s; }
@@ -41,7 +80,6 @@
         .system-card { background: var(--panel-bg); border: 1px solid var(--border-color); padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         h2 { font-size: 1.05rem; color: var(--neon-blue); margin-top: 0; margin-bottom: 15px; letter-spacing: 1px; text-transform: uppercase; }
 
-        /* 프로필 및 포인트 영역 */
         .profile-box { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
         .profile-image-container { position: relative; width: 65px; height: 65px; flex-shrink: 0; }
         .profile-img { width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--neon-blue); object-fit: cover; background: #222; }
@@ -51,19 +89,21 @@
         .title-badge { display: inline-block; padding: 3px 8px; font-size: 0.75rem; font-weight: bold; background: linear-gradient(45deg, rgba(181, 60, 255, 0.2), transparent); border: 1px solid var(--neon-purple); color: var(--neon-purple); border-radius: 4px; margin-bottom: 5px; }
         .btn-history { background: transparent; border: 1px solid var(--text-sub); color: var(--text-sub); font-size: 0.65rem; padding: 3px 6px; border-radius: 4px; cursor: pointer; margin-top: 5px; }
         
-        .stat-summary { text-align: center; margin-bottom: 15px; background: linear-gradient(45deg, rgba(0,217,255,0.05), transparent); padding: 15px; border-radius: 8px; border: 1px solid rgba(0,217,255,0.2); }
-        
-        /* 레벨업 패널 */
+        .name-container { display: flex; align-items: center; gap: 8px; }
+        .btn-edit-name { background: none; border: none; font-size: 0.9rem; cursor: pointer; padding: 0; color: var(--text-sub); transition: 0.2s; }
+        .btn-edit-name:hover { color: var(--neon-blue); transform: scale(1.1); }
+
         .levelup-panel { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 204, 0, 0.05); border: 1px solid var(--neon-gold); padding: 15px; border-radius: 8px; margin-bottom: 20px; }
-        .btn-primary { padding: 12px; background: var(--neon-blue); border: none; color: white; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.2s; text-align: center; }
+        .btn-primary { width: 100%; padding: 12px; background: var(--neon-blue); border: none; color: white; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.2s; text-align: center; }
         .btn-primary:disabled { background: #555; color: #888; border-color: #444; cursor: not-allowed; }
 
-        /* 레이더 차트 */
+        .stat-summary { text-align: center; margin-bottom: 15px; background: linear-gradient(45deg, rgba(0,217,255,0.05), transparent); padding: 15px; border-radius: 8px; border: 1px solid rgba(0,217,255,0.2); }
+        
         .radar-chart-container { display: flex; justify-content: center; margin: 10px 0 20px 0; }
         .radar-chart { width: 100%; max-width: 200px; height: auto; aspect-ratio: 1/1; }
         .radar-bg-line { fill: none; stroke: var(--border-color); stroke-width: 0.8; }
-        .radar-polygon { fill: rgba(0, 217, 255, 0.25); stroke: var(--neon-blue); stroke-width: 2; transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        .radar-point { fill: var(--neon-blue); }
+        .radar-polygon { fill: rgba(0, 217, 255, 0.25); stroke: var(--neon-blue); stroke-width: 2; transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .radar-point { fill: var(--neon-blue); transition: all 0.8s; }
         .radar-label { fill: var(--text-sub); font-size: 7px; font-weight: bold; }
         .radar-value { fill: var(--neon-blue); font-size: 7px; font-weight: bold; }
         
@@ -71,8 +111,8 @@
         .progress-bg { height: 6px; background: #2a2a2a; border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
         .progress-fill { height: 100%; background: var(--neon-blue); box-shadow: 0 0 10px var(--neon-blue); transition: width 1s; width: 0%; }
         [data-theme="light"] .progress-bg { background: #e0e0e0; }
+        .pending-stat { color: var(--neon-gold); font-size: 0.75rem; margin-left: 5px; font-weight: bold; }
 
-        /* 퀘스트 및 캘린더 */
         .quest-list-wrapper { max-height: 400px; overflow-y: auto; padding-right: 5px; }
         .quest-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 10px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: 0.2s; border-radius: 6px; }
         .quest-row:last-child { border-bottom: none; }
@@ -94,7 +134,6 @@
         .cal-date { font-size: 1.1rem; font-weight: 900; color: var(--text-main); }
         .cal-score { font-size: 0.7rem; color: var(--neon-gold); margin-top: 5px; font-weight: bold; }
 
-        /* 기타 UI 공통 (던전, 소셜, 설정) */
         .dungeon-banner { border: 1px solid var(--neon-red); background: rgba(255, 60, 60, 0.05); text-align: center; animation: pulse 2s infinite; }
         @keyframes pulse { 50% { border-color: rgba(255, 60, 60, 0.3); } }
         .map-container { width: 100%; height: 200px; border-radius: 8px; overflow: hidden; margin-bottom: 15px; border: 1px solid var(--border-color); }
@@ -133,7 +172,6 @@
         .nav-item.active { color: var(--neon-blue); }
         .nav-icon { font-size: 1.3rem; margin-bottom: 4px; }
 
-        /* 칭호 모달창 스타일 */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; display: none; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
         .modal-content { background: var(--panel-bg); border: 1px solid var(--neon-blue); padding: 25px; border-radius: 12px; width: 85%; max-height: 70vh; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0, 217, 255, 0.2); }
         .modal-header { font-size: 1.2rem; font-weight: bold; color: var(--neon-blue); margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
@@ -147,166 +185,220 @@
 </head>
 <body>
 
-    <header>
-        <div id="sys-title">LEVEL UP: REBOOT</div>
-        <div class="level-badge" id="sys-level">Lv. 1</div>
-    </header>
-
-    <main>
-        <section id="status" class="view-section active">
-            <div class="profile-box">
-                <div class="profile-image-container">
-                    <img id="profilePreview" class="profile-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E">
-                    <label for="imageUpload" class="upload-overlay">📷</label>
-                    <input type="file" id="imageUpload" accept="image/*" onchange="loadProfileImage(event)">
-                </div>
-                <div>
-                    <div class="title-badge" id="prof-title-badge">철학하는 마라토너</div>
-                    <div style="font-size: 1.2rem; font-weight: bold;" data-i18n="prof_name">플레이어 (나)</div>
-                    <button class="btn-history" onclick="openTitleModal()" data-i18n="btn_hist">칭호 이력 조회</button>
-                </div>
+    <div id="login-screen">
+        <div class="login-box">
+            <div class="login-title">LEVEL UP: REBOOT</div>
+            <div class="login-sub" id="login-desc" data-i18n="login_desc">시스템에 접속하여 현실을 게임처럼.</div>
+            
+            <input type="email" class="login-input" id="login-email" data-i18n-placeholder="ph_email">
+            <input type="password" class="login-input" id="login-pw" data-i18n-placeholder="ph_pw">
+            <div id="pw-hint" class="hint-text" data-i18n="pw_req_hint">※ 8자리 이상, 대문자 1개, 특수문자 2개 이상 포함</div>
+            
+            <input type="password" class="login-input" id="login-pw-confirm" style="display: none;" data-i18n-placeholder="ph_pw_conf">
+            
+            <div id="disclaimer-box" class="disclaimer-text" data-i18n="disclaimer_txt">
+                ※ 가입 시 이용약관 및 면책사항에 동의하는 것으로 간주됩니다. 본 앱은 의료 보조 기구가 아니며, 퀘스트 수행 중 발생하는 신체적 부상이나 손해에 대해 일절 책임지지 않습니다.
             </div>
 
-            <div class="levelup-panel">
-                <div>
-                    <div style="font-size: 0.75rem; color: var(--text-sub);" data-i18n="avail_pts">보유 포인트</div>
-                    <div style="font-size: 1.6rem; font-weight: 900; color: var(--neon-gold);"><span id="display-pts">0</span><span style="font-size: 1rem;"> P</span></div>
-                </div>
-                <div style="text-align: right;">
-                    <button id="btn-levelup" class="btn-primary" style="padding: 10px 20px; font-size: 0.9rem;" onclick="processLevelUp()" data-i18n="btn_lvlup">레벨 업</button>
-                    <div style="font-size: 0.7rem; color: var(--text-sub); margin-top: 5px;">
-                        <span data-i18n="req_pts">요구량:</span> <span id="display-req-pts">100</span> P
+            <button class="btn-primary" style="margin-bottom: 15px;" onclick="simulateLogin()" id="btn-login-submit" data-i18n="btn_login_submit">시스템 접속</button>
+            
+            <button class="btn-primary btn-google" onclick="simulateGoogleLogin()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.16v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.16C1.43 8.55 1 10.22 1 12s.43 3.45 1.16 4.93l3.68-2.84z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.16 7.07l3.68 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+                <span data-i18n="btn_google_login">Google 계정으로 계속</span>
+            </button>
+            
+            <div class="login-toggle" onclick="toggleAuthMode()" id="auth-toggle-text" data-i18n="auth_toggle_signup">계정이 없으신가요? 회원가입</div>
+        </div>
+    </div>
+
+    <div id="app-container">
+        <header>
+            <div id="sys-title">LEVEL UP: REBOOT</div>
+            <div class="level-badge" id="sys-level">Lv. 1</div>
+        </header>
+
+        <main>
+            <section id="status" class="view-section active">
+                <div class="profile-box">
+                    <div class="profile-image-container">
+                        <img id="profilePreview" class="profile-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E">
+                        <label for="imageUpload" class="upload-overlay">📷</label>
+                        <input type="file" id="imageUpload" accept="image/*" onchange="loadProfileImage(event)">
+                    </div>
+                    <div>
+                        <div class="title-badge" id="prof-title-badge">신규 각성자</div>
+                        <div class="name-container">
+                            <div style="font-size: 1.2rem; font-weight: bold;" id="prof-name" data-i18n="prof_name">플레이어 (나)</div>
+                            <button class="btn-edit-name" onclick="changePlayerName()">✏️</button>
+                        </div>
+                        <button class="btn-history" onclick="openTitleModal()" data-i18n="btn_hist">칭호 이력 조회</button>
                     </div>
                 </div>
-            </div>
 
-            <div class="stat-summary">
-                <div style="font-size: 0.8rem; color: var(--text-sub);" data-i18n="tot_score">종합 스코어</div>
-                <div style="font-size: 2.2rem; font-weight: 900; color: var(--text-main); margin-top: 5px;" id="totalScore">0 <span style="font-size: 1rem; color: var(--neon-blue);">pts</span></div>
-            </div>
+                <div class="levelup-panel">
+                    <div>
+                        <div style="font-size: 0.75rem; color: var(--text-sub);" data-i18n="avail_pts">보유 포인트</div>
+                        <div style="font-size: 1.6rem; font-weight: 900; color: var(--neon-gold);"><span id="display-pts">0</span><span style="font-size: 1rem;"> P</span></div>
+                    </div>
+                    <div style="text-align: right;">
+                        <button id="btn-levelup" class="btn-primary" style="width: auto; padding: 10px 20px; font-size: 0.9rem;" onclick="processLevelUp()" data-i18n="btn_lvlup">레벨 업</button>
+                        <div style="font-size: 0.7rem; color: var(--text-sub); margin-top: 5px;">
+                            <span data-i18n="req_pts">요구량:</span> <span id="display-req-pts">100</span> P
+                        </div>
+                    </div>
+                </div>
 
-            <div class="system-card">
-                <h2 data-i18n="radar_title">Stat Radar</h2>
-                <div class="radar-chart-container">
-                    <svg class="radar-chart" viewBox="0 0 100 100" id="radarSvg">
-                        <g id="radarGrid"></g>
-                        <g id="radarAxes"></g>
-                        <polygon id="playerPolygon" class="radar-polygon" points="" />
-                        <g id="radarPoints"></g>
-                        <g id="radarLabels"></g>
-                    </svg>
+                <div class="stat-summary">
+                    <div style="font-size: 0.8rem; color: var(--text-sub);" data-i18n="tot_score">종합 스코어</div>
+                    <div style="font-size: 2.2rem; font-weight: 900; color: var(--text-main); margin-top: 5px;" id="totalScore">0 <span style="font-size: 1rem; color: var(--neon-blue);">pts</span></div>
                 </div>
-                
-                <div style="margin-top: 10px;">
-                    <div class="stat-info"><span data-i18n="bar_str">근력 (물리/운동)</span><span style="color:var(--neon-blue)" id="barVal_str">0</span></div>
-                    <div class="progress-bg"><div class="progress-fill" id="barFill_str"></div></div>
-                    <div class="stat-info"><span data-i18n="bar_int">지능 (학습/인지)</span><span style="color:var(--neon-blue)" id="barVal_int">0</span></div>
-                    <div class="progress-bg"><div class="progress-fill" id="barFill_int"></div></div>
-                    <div class="stat-info"><span data-i18n="bar_cha">매력 (인맥/소통)</span><span style="color:var(--neon-blue)" id="barVal_cha">0</span></div>
-                    <div class="progress-bg"><div class="progress-fill" id="barFill_cha"></div></div>
-                    <div class="stat-info"><span data-i18n="bar_vit">체력 (수면/회복)</span><span style="color:var(--neon-blue)" id="barVal_vit">0</span></div>
-                    <div class="progress-bg"><div class="progress-fill" id="barFill_vit"></div></div>
-                    <div class="stat-info"><span data-i18n="bar_wlth">재력 (자본/투자)</span><span style="color:var(--neon-blue)" id="barVal_wlth">0</span></div>
-                    <div class="progress-bg"><div class="progress-fill" id="barFill_wlth"></div></div>
-                    <div class="stat-info"><span data-i18n="bar_agi">민첩 (시간/효율)</span><span style="color:var(--neon-blue)" id="barVal_agi">0</span></div>
-                    <div class="progress-bg"><div class="progress-fill" id="barFill_agi"></div></div>
-                </div>
-            </div>
-        </section>
 
-        <section id="quests" class="view-section">
-            <h2 data-i18n="quest_title">Daily Quests</h2>
-            <div style="font-size:0.75rem; color:var(--neon-gold); text-align:right; margin-bottom:10px;" data-i18n="quest_hint">※ 퀘스트 완료 시 +20P 획득</div>
-            <div class="system-card">
-                <div class="quest-list-wrapper" id="quest-list-container"></div>
-            </div>
-            <div class="system-card calendar-wrapper">
-                <div class="cal-header">
-                    <span data-i18n="cal_title">주간 진척도</span>
-                    <span style="font-size:0.8rem; color:var(--text-sub);" id="cal-month"></span>
+                <div class="system-card">
+                    <h2 data-i18n="radar_title">Stat Radar</h2>
+                    <div style="font-size: 0.7rem; color:var(--neon-gold); text-align:right;" data-i18n="stat_hint">※ 대기 스탯은 레벨업 시 반영됩니다.</div>
+                    
+                    <div class="radar-chart-container">
+                        <svg class="radar-chart" viewBox="0 0 100 100" id="radarSvg">
+                            <g id="radarGrid"></g>
+                            <g id="radarAxes"></g>
+                            <polygon id="playerPolygon" class="radar-polygon" points="" />
+                            <g id="radarPoints"></g>
+                            <g id="radarLabels"></g>
+                        </svg>
+                    </div>
+                    
+                    <div style="margin-top: 10px;">
+                        <div class="stat-info">
+                            <span data-i18n="bar_str">근력 (물리/운동)</span>
+                            <div><span style="color:var(--neon-blue)" id="barVal_str">0</span><span class="pending-stat" id="pendVal_str"></span></div>
+                        </div>
+                        <div class="progress-bg"><div class="progress-fill" id="barFill_str"></div></div>
+                        
+                        <div class="stat-info">
+                            <span data-i18n="bar_int">지능 (학습/인지)</span>
+                            <div><span style="color:var(--neon-blue)" id="barVal_int">0</span><span class="pending-stat" id="pendVal_int"></span></div>
+                        </div>
+                        <div class="progress-bg"><div class="progress-fill" id="barFill_int"></div></div>
+                        
+                        <div class="stat-info">
+                            <span data-i18n="bar_cha">매력 (인맥/소통)</span>
+                            <div><span style="color:var(--neon-blue)" id="barVal_cha">0</span><span class="pending-stat" id="pendVal_cha"></span></div>
+                        </div>
+                        <div class="progress-bg"><div class="progress-fill" id="barFill_cha"></div></div>
+                        
+                        <div class="stat-info">
+                            <span data-i18n="bar_vit">체력 (수면/회복)</span>
+                            <div><span style="color:var(--neon-blue)" id="barVal_vit">0</span><span class="pending-stat" id="pendVal_vit"></span></div>
+                        </div>
+                        <div class="progress-bg"><div class="progress-fill" id="barFill_vit"></div></div>
+                        
+                        <div class="stat-info">
+                            <span data-i18n="bar_wlth">재력 (자본/투자)</span>
+                            <div><span style="color:var(--neon-blue)" id="barVal_wlth">0</span><span class="pending-stat" id="pendVal_wlth"></span></div>
+                        </div>
+                        <div class="progress-bg"><div class="progress-fill" id="barFill_wlth"></div></div>
+                        
+                        <div class="stat-info">
+                            <span data-i18n="bar_agi">민첩 (시간/효율)</span>
+                            <div><span style="color:var(--neon-blue)" id="barVal_agi">0</span><span class="pending-stat" id="pendVal_agi"></span></div>
+                        </div>
+                        <div class="progress-bg"><div class="progress-fill" id="barFill_agi"></div></div>
+                    </div>
                 </div>
-                <div class="cal-grid" id="calendar-grid"></div>
-            </div>
-        </section>
+            </section>
 
-        <section id="dungeon" class="view-section">
-            <h2 data-i18n="raid_title">Local Raid</h2>
-            <div class="system-card dungeon-banner">
-                <h3 style="color: var(--neon-red); margin: 0 0 10px 0; font-size:1.2rem;" data-i18n="raid_boss">⚠️ 서울 강남 연합 보스 출현</h3>
-                <div class="map-container">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3164.8872958213665!2d127.02498261564757!3d37.49805097981048!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca1598c471015%3A0x6b0d1e57c631a3!2z6rCV64Ko7Jet!5e0!3m2!1sko!2skr!4v1690000000000!5m2!1sko!2skr" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <section id="quests" class="view-section">
+                <h2 data-i18n="quest_title">Daily Quests</h2>
+                <div style="font-size:0.75rem; color:var(--neon-gold); text-align:right; margin-bottom:10px;" data-i18n="quest_hint">※ 퀘스트 완료 시 +20P 및 스탯 +0.5 대기 적립</div>
+                <div class="system-card">
+                    <div class="quest-list-wrapper" id="quest-list-container"></div>
                 </div>
-                <p style="font-size: 0.85rem; color: var(--text-main); margin-bottom: 5px;" data-i18n="raid_desc1">"퇴근길의 유혹자"가 감지되었습니다.</p>
-                <p style="font-size: 0.75rem; color: var(--text-sub);" data-i18n="raid_desc2">근처의 헌터들과 연합하여 2시간 내<br>합산 50km를 달성하고 전리품을 획득하세요.</p>
-                <div style="font-size: 0.8rem; margin: 15px 0; font-weight:bold;"><span data-i18n="raid_part">현재 참여 인원: </span><span style="color:var(--neon-blue)">4</span> / 10</div>
-                <button class="btn-primary" style="background: var(--neon-red);" data-i18n="raid_btn">레이드 입장하기</button>
-            </div>
-        </section>
+                <div class="system-card calendar-wrapper">
+                    <div class="cal-header">
+                        <span data-i18n="cal_title">주간 진척도</span>
+                        <span style="font-size:0.8rem; color:var(--text-sub);" id="cal-month"></span>
+                    </div>
+                    <div class="cal-grid" id="calendar-grid"></div>
+                </div>
+            </section>
 
-        <section id="social" class="view-section">
-            <div class="social-header">
-                <button class="social-tab-btn active" onclick="toggleSocialMode('global', this)" data-i18n="soc_global">🏆 글로벌 랭킹</button>
-                <button class="social-tab-btn" onclick="toggleSocialMode('friends', this)" data-i18n="soc_friend">👥 내 친구</button>
-            </div>
-            <div id="ranking-controls" class="rank-tabs">
-                <button class="rank-tab-btn active" onclick="renderUsers('total', this)" data-i18n="sort_tot">종합스코어</button>
-                <button class="rank-tab-btn" onclick="renderUsers('str', this)" data-i18n="sort_str">근력</button>
-                <button class="rank-tab-btn" onclick="renderUsers('int', this)" data-i18n="sort_int">지능</button>
-                <button class="rank-tab-btn" onclick="renderUsers('cha', this)" data-i18n="sort_cha">매력</button>
-                <button class="rank-tab-btn" onclick="renderUsers('vit', this)" data-i18n="sort_vit">체력</button>
-                <button class="rank-tab-btn" onclick="renderUsers('wlth', this)" data-i18n="sort_wlth">재력</button>
-                <button class="rank-tab-btn" onclick="renderUsers('agi', this)" data-i18n="sort_agi">민첩</button>
-            </div>
-            <div class="user-list" id="user-list-container"></div>
-        </section>
+            <section id="dungeon" class="view-section">
+                <h2 data-i18n="raid_title">Local Raid</h2>
+                <div class="system-card dungeon-banner">
+                    <h3 style="color: var(--neon-red); margin: 0 0 10px 0; font-size:1.2rem;" data-i18n="raid_boss">⚠️ 서울 강남 연합 보스 출현</h3>
+                    <div class="map-container">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3164.8872958213665!2d127.02498261564757!3d37.49805097981048!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca1598c471015%3A0x6b0d1e57c631a3!2z6rCV64Ko7Jet!5e0!3m2!1sko!2skr!4v1690000000000!5m2!1sko!2skr" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--text-main); margin-bottom: 5px;" data-i18n="raid_desc1">"퇴근길의 유혹자"가 감지되었습니다.</p>
+                    <p style="font-size: 0.75rem; color: var(--text-sub);" data-i18n="raid_desc2">근처 헌터들과 연합하여 2시간 내<br>합산 50km를 달성하고 전리품을 획득하세요.</p>
+                    <div style="font-size: 0.8rem; margin: 15px 0; font-weight:bold;"><span data-i18n="raid_part">참여 인원: </span><span style="color:var(--neon-blue)">4</span> / 10</div>
+                    <button class="btn-primary" style="background: var(--neon-red);" data-i18n="raid_btn">레이드 입장하기</button>
+                </div>
+            </section>
 
-        <section id="settings" class="view-section">
-            <h2 data-i18n="set_title">System Settings</h2>
-            <div class="system-card">
-                <div class="setting-row">
-                    <span data-i18n="set_lang">언어 (Language)</span>
-                    <select class="custom-select" onchange="changeLanguage(this.value)">
-                        <option value="ko" selected>한국어</option>
-                        <option value="en">English</option>
-                        <option value="ja">日本語</option>
-                    </select>
+            <section id="social" class="view-section">
+                <div class="social-header">
+                    <button class="social-tab-btn active" onclick="toggleSocialMode('global', this)" data-i18n="soc_global">🏆 글로벌 랭킹</button>
+                    <button class="social-tab-btn" onclick="toggleSocialMode('friends', this)" data-i18n="soc_friend">👥 내 친구</button>
                 </div>
-                <div class="setting-row">
-                    <span data-i18n="set_theme">라이트 모드</span>
-                    <label class="switch"><input type="checkbox" id="theme-toggle" onchange="changeTheme()"><span class="slider"></span></label>
+                <div id="ranking-controls" class="rank-tabs">
+                    <button class="rank-tab-btn active" onclick="renderUsers('total', this)" data-i18n="sort_tot">종합스코어</button>
+                    <button class="rank-tab-btn" onclick="renderUsers('str', this)" data-i18n="sort_str">근력</button>
+                    <button class="rank-tab-btn" onclick="renderUsers('int', this)" data-i18n="sort_int">지능</button>
+                    <button class="rank-tab-btn" onclick="renderUsers('cha', this)" data-i18n="sort_cha">매력</button>
+                    <button class="rank-tab-btn" onclick="renderUsers('vit', this)" data-i18n="sort_vit">체력</button>
+                    <button class="rank-tab-btn" onclick="renderUsers('wlth', this)" data-i18n="sort_wlth">재력</button>
+                    <button class="rank-tab-btn" onclick="renderUsers('agi', this)" data-i18n="sort_agi">민첩</button>
                 </div>
-                <div class="setting-row">
-                    <span data-i18n="set_push">푸시 알림 수신</span>
-                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
-                </div>
-            </div>
-            <div class="system-card">
-                <div class="setting-row">
-                    <span data-i18n="set_gps">앱 실행 시 현위치 탐색</span>
-                    <label class="switch"><input type="checkbox" id="gps-toggle" onchange="toggleGPS()"><span class="slider"></span></label>
-                </div>
-                <div class="setting-row" id="gps-status" style="font-size:0.75rem; color:var(--text-sub); display:none; justify-content:flex-end; padding-top:0;">
-                    위치 정보를 기다리는 중...
-                </div>
-                
-                <div class="setting-row">
-                    <span data-i18n="set_sync">삼성 헬스 / 건강 앱 동기화</span>
-                    <label class="switch"><input type="checkbox" id="sync-toggle" onchange="toggleHealthSync()"><span class="slider"></span></label>
-                </div>
-                <div class="setting-row" id="sync-status" style="font-size:0.75rem; color:var(--neon-blue); display:none; justify-content:flex-end; padding-top:0; text-align:right;">
-                </div>
-            </div>
-            <button class="btn-primary" style="background: #222; border: 1px solid var(--border-color); color: var(--neon-red);" data-i18n="set_logout">로그아웃</button>
-        </section>
-    </main>
+                <div class="user-list" id="user-list-container"></div>
+            </section>
 
-    <nav>
-        <div class="nav-item active" onclick="switchTab('status', this)"><span class="nav-icon">👤</span><span data-i18n="nav_status">상태창</span></div>
-        <div class="nav-item" onclick="switchTab('quests', this)"><span class="nav-icon">📜</span><span data-i18n="nav_quest">퀘스트</span></div>
-        <div class="nav-item" onclick="switchTab('dungeon', this)"><span class="nav-icon">⚔️</span><span data-i18n="nav_dungeon">던전</span></div>
-        <div class="nav-item" onclick="switchTab('social', this)"><span class="nav-icon">🏆</span><span data-i18n="nav_social">소셜</span></div>
-        <div class="nav-item" onclick="switchTab('settings', this)"><span class="nav-icon">⚙️</span><span data-i18n="nav_settings">설정</span></div>
-    </nav>
+            <section id="settings" class="view-section">
+                <h2 data-i18n="set_title">System Settings</h2>
+                <div class="system-card">
+                    <div class="setting-row">
+                        <span data-i18n="set_lang">언어 (Language)</span>
+                        <select class="custom-select" onchange="changeLanguage(this.value)">
+                            <option value="ko" selected>한국어</option>
+                            <option value="en">English</option>
+                            <option value="ja">日本語</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <span data-i18n="set_theme">라이트 모드</span>
+                        <label class="switch"><input type="checkbox" id="theme-toggle" onchange="changeTheme()"><span class="slider"></span></label>
+                    </div>
+                </div>
+                <div class="system-card">
+                    <div class="setting-row">
+                        <span data-i18n="set_gps">앱 실행 시 현위치 탐색</span>
+                        <label class="switch"><input type="checkbox" id="gps-toggle" onchange="toggleGPS()"><span class="slider"></span></label>
+                    </div>
+                    <div class="setting-row" id="gps-status" style="font-size:0.75rem; color:var(--text-sub); display:none; justify-content:flex-end; padding-top:0;"></div>
+                    
+                    <div class="setting-row">
+                        <span data-i18n="set_sync">건강 앱 동기화</span>
+                        <label class="switch"><input type="checkbox" id="sync-toggle" onchange="toggleHealthSync()"><span class="slider"></span></label>
+                    </div>
+                    <div class="setting-row" id="sync-status" style="font-size:0.75rem; color:var(--neon-blue); display:none; justify-content:flex-end; padding-top:0; text-align:right;"></div>
+                </div>
+                <button class="btn-primary" style="background: #222; border: 1px solid var(--border-color); color: var(--neon-red);" onclick="logout()" data-i18n="set_logout">로그아웃</button>
+            </section>
+        </main>
+
+        <nav>
+            <div class="nav-item active" onclick="switchTab('status', this)"><span class="nav-icon">👤</span><span data-i18n="nav_status">상태창</span></div>
+            <div class="nav-item" onclick="switchTab('quests', this)"><span class="nav-icon">📜</span><span data-i18n="nav_quest">퀘스트</span></div>
+            <div class="nav-item" onclick="switchTab('dungeon', this)"><span class="nav-icon">⚔️</span><span data-i18n="nav_dungeon">던전</span></div>
+            <div class="nav-item" onclick="switchTab('social', this)"><span class="nav-icon">🏆</span><span data-i18n="nav_social">소셜</span></div>
+            <div class="nav-item" onclick="switchTab('settings', this)"><span class="nav-icon">⚙️</span><span data-i18n="nav_settings">설정</span></div>
+        </nav>
+    </div>
 
     <div class="modal-overlay" id="titleModal">
         <div class="modal-content">
@@ -314,56 +406,182 @@
                 <span data-i18n="modal_title">칭호 이력 조회</span>
                 <button class="modal-close" onclick="closeTitleModal()">×</button>
             </div>
-            <div class="history-list" id="history-list-container">
-                </div>
+            <div class="history-list" id="history-list-container"></div>
         </div>
     </div>
 
     <script>
-        // --- 1. i18n Dictionary & Title Vocab ---
+        // --- 0. 로그인 및 인증 로직 (정규식 검증 추가) ---
+        let isLoginMode = true;
+
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn === 'true') {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app-container').style.display = 'flex';
+                changeTheme(); loadPlayerName(); changeLanguage('ko'); renderCalendar(); updatePointUI();
+                drawRadarChart(); 
+            } else {
+                document.getElementById('login-screen').style.display = 'flex';
+                document.getElementById('app-container').style.display = 'none';
+            }
+        }
+
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            const btnSubmit = document.getElementById('btn-login-submit');
+            const toggleText = document.getElementById('auth-toggle-text');
+            const pwConfirm = document.getElementById('login-pw-confirm');
+            const pwHint = document.getElementById('pw-hint');
+            const disclaimerBox = document.getElementById('disclaimer-box');
+            
+            if(isLoginMode) {
+                btnSubmit.setAttribute('data-i18n', 'btn_login_submit');
+                toggleText.setAttribute('data-i18n', 'auth_toggle_signup');
+                pwConfirm.style.display = 'none';
+                pwHint.style.display = 'none';
+                disclaimerBox.style.display = 'none';
+            } else {
+                btnSubmit.setAttribute('data-i18n', 'btn_signup_submit');
+                toggleText.setAttribute('data-i18n', 'auth_toggle_login');
+                pwConfirm.style.display = 'block';
+                pwHint.style.display = 'block';
+                disclaimerBox.style.display = 'block';
+            }
+            changeLanguage(currentLang); 
+        }
+
+        function simulateLogin() {
+            const email = document.getElementById('login-email').value;
+            const pw = document.getElementById('login-pw').value;
+            const pwConfirm = document.getElementById('login-pw-confirm').value;
+
+            // 1. 공백 체크
+            if(!email || !pw) { 
+                alert(i18n[currentLang].login_err_empty); 
+                return; 
+            }
+
+            // 2. 이메일 정규식 검증
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if(!emailRegex.test(email)) {
+                alert(i18n[currentLang].login_err_email);
+                return;
+            }
+
+            // 3. 회원가입 시 비밀번호 유효성 검증
+            if(!isLoginMode) {
+                // 대문자 확인
+                const hasUppercase = /[A-Z]/.test(pw);
+                // 특수문자 개수 확인 (알파벳, 숫자가 아닌 문자의 개수 추출)
+                const specialChars = pw.match(/[^a-zA-Z0-9]/g) || [];
+                
+                if(pw.length < 8 || !hasUppercase || specialChars.length < 2) {
+                    alert(i18n[currentLang].login_err_pw_req);
+                    return;
+                }
+
+                // 비밀번호 확인 일치 여부
+                if(pw !== pwConfirm) {
+                    alert(i18n[currentLang].pw_mismatch);
+                    return;
+                }
+            }
+
+            // 인증 통과
+            localStorage.setItem('isLoggedIn', 'true');
+            checkLoginStatus();
+        }
+
+        function simulateGoogleLogin() {
+            localStorage.setItem('isLoggedIn', 'true');
+            checkLoginStatus();
+        }
+
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            document.getElementById('login-email').value = '';
+            document.getElementById('login-pw').value = '';
+            document.getElementById('login-pw-confirm').value = '';
+            
+            isLoginMode = true; 
+            document.getElementById('btn-login-submit').setAttribute('data-i18n', 'btn_login_submit');
+            document.getElementById('auth-toggle-text').setAttribute('data-i18n', 'auth_toggle_signup');
+            document.getElementById('login-pw-confirm').style.display = 'none';
+            document.getElementById('pw-hint').style.display = 'none';
+            document.getElementById('disclaimer-box').style.display = 'none';
+            
+            changeLanguage(currentLang);
+            checkLoginStatus();
+        }
+
+        // --- 1. i18n Dictionary ---
         const i18n = {
             ko: {
+                login_desc: "시스템에 접속하여 현실을 게임처럼.", btn_login_submit: "시스템 접속 (로그인)", btn_signup_submit: "새 플레이어 등록 (회원가입)", 
+                btn_google_login: "Google로 시작", auth_toggle_signup: "계정이 없으신가요? 회원가입", auth_toggle_login: "이미 계정이 있으신가요? 로그인",
+                ph_email: "이메일 (Email)", ph_pw: "비밀번호 (Password)", ph_pw_conf: "비밀번호 확인 (Confirm Password)",
+                pw_req_hint: "※ 비밀번호: 8자리 이상, 대문자 1개 이상, 특수문자 2개 이상 포함",
+                disclaimer_txt: "※ 가입 시 이용약관 및 면책사항에 동의하는 것으로 간주됩니다. 본 앱은 의료 보조 기구가 아니며, 퀘스트 수행 중 발생하는 신체적 부상이나 손해에 대해 일절 책임지지 않습니다.",
+                login_err_empty: "이메일과 비밀번호를 모두 입력해주세요.", login_err_email: "유효한 이메일 주소를 입력해주세요.", 
+                login_err_pw_req: "비밀번호 조건(8자리 이상, 대문자 1개 이상, 특수문자 2개 이상)을 충족해주세요.", pw_mismatch: "비밀번호가 일치하지 않습니다.",
+                
                 nav_status: "상태창", nav_quest: "퀘스트", nav_dungeon: "던전", nav_social: "소셜", nav_settings: "설정",
                 prof_name: "플레이어 (나)", btn_hist: "칭호 이력 조회", avail_pts: "보유 포인트", btn_lvlup: "레벨 업", req_pts: "요구량:",
-                tot_score: "종합 스코어", radar_title: "Stat Radar", 
+                tot_score: "종합 스코어", radar_title: "Stat Radar", stat_hint: "※ 대기 스탯은 레벨업 시 일괄 반영됩니다.",
                 str: "근력", int: "지능", cha: "매력", vit: "체력", wlth: "재력", agi: "민첩",
                 bar_str: "근력 (물리/운동)", bar_int: "지능 (학습/인지)", bar_cha: "매력 (인맥/소통)", bar_vit: "체력 (수면/회복)", bar_wlth: "재력 (자본/투자)", bar_agi: "민첩 (시간/효율)",
-                quest_title: "Daily Quests", quest_hint: "※ 퀘스트 완료 시 +20P 획득", cal_title: "주간 진척도",
+                quest_title: "Daily Quests", quest_hint: "※ 퀘스트 완료 시 +20P 및 스탯 +0.5 대기 적립", cal_title: "주간 진척도",
                 raid_title: "Local Raid", raid_boss: "⚠️ 서울 강남 연합 보스 출현", raid_desc1: '"퇴근길의 유혹자"가 감지되었습니다.', raid_desc2: "근처 헌터들과 연합하여 2시간 내<br>합산 50km를 달성하고 전리품을 획득하세요.", raid_part: "참여 인원: ", raid_btn: "레이드 입장하기",
                 soc_global: "🏆 글로벌 랭킹", soc_friend: "👥 내 친구", sort_tot: "종합스코어", sort_str: "근력", sort_int: "지능", sort_cha: "매력", sort_vit: "체력", sort_wlth: "재력", sort_agi: "민첩",
-                set_title: "System Settings", set_lang: "언어 (Language)", set_theme: "라이트 모드", set_push: "푸시 알림 수신", set_gps: "앱 실행 시 현위치 탐색", set_sync: "건강 앱(Health) 동기화", set_logout: "로그아웃",
+                set_title: "System Settings", set_lang: "언어 (Language)", set_theme: "라이트 모드", set_push: "푸시 알림 수신", set_gps: "앱 실행 시 현위치 탐색", set_sync: "건강 앱 동기화", set_logout: "로그아웃",
                 no_friend: "등록된 친구가 없습니다.", btn_add: "친구 추가", btn_added: "친구 ✓", gps_on: "위치 권한 활성화됨", gps_off: "위치 탐색 중지됨", gps_err: "위치 정보 오류", modal_title: "칭호 이력 조회",
-                sync_req: "헬스 커넥트 권한 요청 중...", sync_done: "동기화 완료:<br>10,234보 / 수면 7.5h (근력/체력 상승!)", sync_off: "동기화가 해제되었습니다."
+                name_prompt: "새로운 닉네임을 입력하세요.\n(※ 1개월에 1회만 변경 가능합니다.)", name_err: "명칭 변경은 1개월에 한 번만 가능합니다.", sync_req: "동기화 요청 중...", sync_done: "동기화 완료 (포인트 지급)", sync_off: "동기화 해제됨"
             },
             en: {
+                login_desc: "Access the system, gamify your life.", btn_login_submit: "System Access (Login)", btn_signup_submit: "Register Player (Sign Up)", 
+                btn_google_login: "Continue with Google", auth_toggle_signup: "No account? Sign Up", auth_toggle_login: "Already have an account? Login",
+                ph_email: "Email Address", ph_pw: "Password", ph_pw_conf: "Confirm Password",
+                pw_req_hint: "※ Password: 8+ chars, 1+ uppercase, 2+ special chars",
+                disclaimer_txt: "※ By signing up, you agree to our Terms and Disclaimer. This app does not provide medical advice and is not liable for any injuries during quests.",
+                login_err_empty: "Please enter your email and password.", login_err_email: "Please enter a valid email address.",
+                login_err_pw_req: "Password must be 8+ characters with at least 1 uppercase and 2 special characters.", pw_mismatch: "Passwords do not match.",
+                
                 nav_status: "Status", nav_quest: "Quests", nav_dungeon: "Dungeon", nav_social: "Social", nav_settings: "Settings",
                 prof_name: "Player (Me)", btn_hist: "Title History", avail_pts: "Available Pts", btn_lvlup: "Level Up", req_pts: "Required:",
-                tot_score: "Total Score", radar_title: "Stat Radar", 
+                tot_score: "Total Score", radar_title: "Stat Radar", stat_hint: "※ Pending stats are applied upon Level Up.",
                 str: "STR", int: "INT", cha: "CHA", vit: "VIT", wlth: "WLTH", agi: "AGI",
                 bar_str: "STR (Physical/Workout)", bar_int: "INT (Study/Cognition)", bar_cha: "CHA (Network/Comm)", bar_vit: "VIT (Sleep/Recovery)", bar_wlth: "WLTH (Capital/Invest)", bar_agi: "AGI (Time/Efficiency)",
-                quest_title: "Daily Quests", quest_hint: "※ Complete quest to earn +20P", cal_title: "Weekly Progress",
+                quest_title: "Daily Quests", quest_hint: "※ Earn +20P & +0.5 pending stat per quest", cal_title: "Weekly Progress",
                 raid_title: "Local Raid", raid_boss: "⚠️ Gangnam Alliance Boss", raid_desc1: '"Predator of Laziness" detected.', raid_desc2: "Unite with nearby hunters to achieve<br>50km in 2 hours and get loot.", raid_part: "Participants: ", raid_btn: "Enter Raid",
                 soc_global: "🏆 Global Rank", soc_friend: "👥 My Friends", sort_tot: "Total", sort_str: "STR", sort_int: "INT", sort_cha: "CHA", sort_vit: "VIT", sort_wlth: "WLTH", sort_agi: "AGI",
-                set_title: "System Settings", set_lang: "Language", set_theme: "Light Theme", set_push: "Push Notifications", set_gps: "Auto Location Tracking", set_sync: "Sync Health App Data", set_logout: "Logout",
+                set_title: "System Settings", set_lang: "Language", set_theme: "Light Theme", set_push: "Push Notifications", set_gps: "Auto Location Tracking", set_sync: "Health App Sync", set_logout: "Logout",
                 no_friend: "No friends registered.", btn_add: "Add Friend", btn_added: "Friend ✓", gps_on: "Location tracking on", gps_off: "Location tracking off", gps_err: "Location Error", modal_title: "Title History",
-                sync_req: "Requesting Health Connect...", sync_done: "Sync Complete:<br>10,234 steps / 7.5h sleep (STR/VIT up!)", sync_off: "Sync disabled."
+                name_prompt: "Enter new player name.\n(Can be changed once a month)", name_err: "Name can only be changed once a month.", sync_req: "Requesting sync...", sync_done: "Sync complete", sync_off: "Sync disabled"
             },
             ja: {
+                login_desc: "システムに接続し、現実をゲームのように。", btn_login_submit: "システム接続 (ログイン)", btn_signup_submit: "新規プレイヤー登録", 
+                btn_google_login: "Googleで続行", auth_toggle_signup: "アカウントがありませんか？ 新規登録", auth_toggle_login: "すでにアカウントをお持ちですか？ ログイン",
+                ph_email: "メールアドレス", ph_pw: "パスワード", ph_pw_conf: "パスワード (確認用)",
+                pw_req_hint: "※ パスワード: 8文字以上、大文字1つ、特殊文字2つ以上",
+                disclaimer_txt: "※ 登録により利用規約と免責事項に同意したとみなされます。本アプリは医療的助言を提供するものではなく、クエスト中の怪我等について一切の責任を負いません。",
+                login_err_empty: "メールアドレスとパスワードを入力してください。", login_err_email: "有効なメールアドレスを入力してください。",
+                login_err_pw_req: "パスワードの条件(8文字以上、大文字1つ以上、特殊文字2つ以上)を満たしてください。", pw_mismatch: "パスワードが一致しません。",
+
                 nav_status: "ステータス", nav_quest: "クエスト", nav_dungeon: "ダンジョン", nav_social: "ソーシャル", nav_settings: "設定",
-                prof_name: "プレイヤー (私)", btn_hist: "称号履歴", avail_pts: "保有ポイント", btn_lvlup: "レベルアップ", req_pts: "必要量:",
-                tot_score: "総合スコア", radar_title: "ステータスレーダー", 
+                prof_name: "プレイヤー (私)", btn_hist: "称号履歴", avail_pts: "保有ポイント", btn_lvlup: "レベルUP", req_pts: "必要量:",
+                tot_score: "総合スコア", radar_title: "ステータスレーダー", stat_hint: "※ 待機ステータスはレベルUP時に反映されます。",
                 str: "筋力", int: "知能", cha: "魅力", vit: "体力", wlth: "財力", agi: "敏捷",
                 bar_str: "筋力 (物理/運動)", bar_int: "知能 (学習/認知)", bar_cha: "魅力 (人脈/疎通)", bar_vit: "体力 (睡眠/回復)", bar_wlth: "財力 (資本/投資)", bar_agi: "敏捷 (時間/効率)",
-                quest_title: "デイリークエスト", quest_hint: "※ クエスト完了時 +20P 獲得", cal_title: "週間進捗度",
+                quest_title: "デイリークエスト", quest_hint: "※ クエスト完了で +20P & 待機ステータス+0.5", cal_title: "週間進捗度",
                 raid_title: "ローカルレイド", raid_boss: "⚠️ 江南連合ボス出現", raid_desc1: "「怠惰の捕食者」感知。", raid_desc2: "近くのハンターと連合して2時間以内に<br>合計50kmを達成し戦利品を獲得せよ。", raid_part: "参加人数: ", raid_btn: "入場する",
                 soc_global: "🏆 グローバルランク", soc_friend: "👥 マイフレンド", sort_tot: "総合", sort_str: "筋力", sort_int: "知能", sort_cha: "魅力", sort_vit: "体力", sort_wlth: "財力", sort_agi: "敏捷",
                 set_title: "システム設定", set_lang: "言語 (Language)", set_theme: "ライトモード", set_push: "プッシュ通知受信", set_gps: "起動時の位置情報取得", set_sync: "ヘルスケアアプリ同期", set_logout: "ログアウト",
                 no_friend: "友達がいません。", btn_add: "友達追加", btn_added: "友達 ✓", gps_on: "位置情報有効", gps_off: "位置情報停止", gps_err: "位置情報エラー", modal_title: "称号履歴",
-                sync_req: "ヘルス権限をリクエスト中...", sync_done: "同期完了:<br>10,234歩 / 睡眠7.5h (筋力・体力UP!)", sync_off: "同期が解除されました。"
+                name_prompt: "新しいプレイヤー名を入力してください。\n(月に1回のみ変更可能)", name_err: "名前の変更は月に1回のみ可能です。", sync_req: "同期を要求中...", sync_done: "同期完了", sync_off: "同期解除"
             }
         };
 
-        // 인디언식 호칭 데이터 풀 (1위 형용사 + 2위 명사)
         const titleVocab = {
             str: { ko: { pre: ["강인한", "거친", "부서지지 않는"], suf: ["곰", "바위", "거인"] }, en: { pre: ["Strong", "Tough", "Unbreakable"], suf: ["Bear", "Rock", "Giant"] }, ja: { pre: ["強靭な", "荒々しい", "砕けない"], suf: ["熊", "岩", "巨人"] } },
             int: { ko: { pre: ["지혜로운", "꿰뚫어보는", "깊은"], suf: ["올빼미", "호수", "현자"] }, en: { pre: ["Wise", "Piercing", "Deep"], suf: ["Owl", "Lake", "Sage"] }, ja: { pre: ["知恵のある", "見抜く", "深い"], suf: ["フクロウ", "湖", "賢者"] } },
@@ -373,18 +591,48 @@
             agi: { ko: { pre: ["날쌘", "바람을 가르는", "보이지 않는"], suf: ["표범", "화살", "매"] }, en: { pre: ["Swift", "Wind-cleaving", "Unseen"], suf: ["Panther", "Arrow", "Hawk"] }, ja: { pre: ["素早い", "風を切る", "見えない"], suf: ["ヒョウ", "矢", "鷹"] } }
         };
 
-        // --- 2. 시스템 상태 변수 (레벨업 및 칭호) ---
-        let currentLang = 'ko';
+        // --- 2. 시스템 상태 ---
         let userLevel = 1;
-        let userPoints = 150; 
+        let userPoints = 50; 
+        
+        const statKeys = ['str', 'int', 'cha', 'vit', 'wlth', 'agi'];
+        const myStats = { str: 0, int: 0, cha: 0, vit: 0, wlth: 0, agi: 0 };
+        const pendingStats = { str: 0, int: 0, cha: 0, vit: 0, wlth: 0, agi: 0 };
+
         let titleHistory = [
-            { level: 1, title: { ko: "새내기 헌터", en: "Novice Hunter", ja: "新米ハンター" } }
+            { level: 1, title: { ko: "신규 각성자", en: "New Awakened", ja: "新規覚醒者" } }
         ];
 
-        const statKeys = ['str', 'int', 'cha', 'vit', 'wlth', 'agi'];
-        const myStats = { str: 82, int: 70, cha: 65, vit: 85, wlth: 55, agi: 45 };
+        function loadPlayerName() {
+            const savedName = localStorage.getItem('playerName');
+            if (savedName) {
+                document.getElementById('prof-name').textContent = savedName;
+                document.getElementById('prof-name').removeAttribute('data-i18n'); 
+            }
+        }
 
-        // 필요 포인트 지수 증가 공식: 100 * (1.5 ^ (레벨-1))
+        function changePlayerName() {
+            const lastChanged = localStorage.getItem('lastNameChange');
+            const now = new Date().getTime();
+            const thirtyDays = 30 * 24 * 60 * 60 * 1000;
+
+            if (lastChanged && (now - lastChanged) < thirtyDays) {
+                const remain = Math.ceil((thirtyDays - (now - lastChanged)) / (1000*60*60*24));
+                alert(`${i18n[currentLang].name_err} (${remain}일 후 가능)`);
+                return;
+            }
+
+            const newName = prompt(i18n[currentLang].name_prompt);
+            if (newName && newName.trim() !== "") {
+                const finalName = newName.trim();
+                document.getElementById('prof-name').textContent = finalName;
+                document.getElementById('prof-name').removeAttribute('data-i18n');
+                localStorage.setItem('lastNameChange', now.toString());
+                localStorage.setItem('playerName', finalName);
+                renderUsers(currentSortCriteria);
+            }
+        }
+
         function getReqPoints(level) { return Math.floor(100 * Math.pow(1.5, level - 1)); }
 
         function updatePointUI() {
@@ -395,19 +643,18 @@
             
             const btn = document.getElementById('btn-levelup');
             if(userPoints >= reqPts) {
-                btn.disabled = false;
-                btn.style.background = "var(--neon-gold)";
-                btn.style.color = "black";
-                btn.style.boxShadow = "0 0 15px var(--neon-gold)";
+                btn.disabled = false; btn.style.background = "var(--neon-gold)"; btn.style.color = "black"; btn.style.boxShadow = "0 0 15px var(--neon-gold)";
             } else {
-                btn.disabled = true;
-                btn.style.background = "#333";
-                btn.style.color = "#888";
-                btn.style.boxShadow = "none";
+                btn.disabled = true; btn.style.background = "#333"; btn.style.color = "#888"; btn.style.boxShadow = "none";
             }
+            document.getElementById('prof-title-badge').innerText = titleHistory[titleHistory.length - 1].title[currentLang];
             
-            const latestTitle = titleHistory[titleHistory.length - 1].title[currentLang];
-            document.getElementById('prof-title-badge').innerText = latestTitle;
+            statKeys.forEach(k => {
+                const pendEl = document.getElementById(`pendVal_${k}`);
+                if (pendingStats[k] > 0) pendEl.textContent = `(+${pendingStats[k]})`;
+                else if (pendingStats[k] < 0) pendEl.textContent = `(${pendingStats[k]})`;
+                else pendEl.textContent = "";
+            });
         }
 
         function generateTitle() {
@@ -428,12 +675,16 @@
             if(userPoints >= reqPts) {
                 userPoints -= reqPts;
                 userLevel++;
+                
+                statKeys.forEach(k => {
+                    myStats[k] = Math.min(100, myStats[k] + pendingStats[k]);
+                    pendingStats[k] = 0;
+                });
+
                 const newTitleObj = generateTitle();
                 titleHistory.push({ level: userLevel, title: newTitleObj });
-                myStats.str = Math.min(100, myStats.str + Math.floor(Math.random()*3));
-                myStats.vit = Math.min(100, myStats.vit + Math.floor(Math.random()*3));
 
-                updatePointUI(); drawRadarChart(); renderHistoryModal();
+                updatePointUI(); drawRadarChart(); renderHistoryModal(); renderUsers(currentSortCriteria);
                 alert(`Level Up! [Lv.${userLevel}]\n새로운 칭호 획득: ${newTitleObj[currentLang]}`);
             }
         }
@@ -441,29 +692,28 @@
         function openTitleModal() { renderHistoryModal(); document.getElementById('titleModal').style.display = 'flex'; }
         function closeTitleModal() { document.getElementById('titleModal').style.display = 'none'; }
         function renderHistoryModal() {
-            const container = document.getElementById('history-list-container');
-            container.innerHTML = '';
+            const container = document.getElementById('history-list-container'); container.innerHTML = '';
             [...titleHistory].reverse().forEach(hist => {
-                const item = document.createElement('div');
-                item.className = 'history-item';
+                const item = document.createElement('div'); item.className = 'history-item';
                 item.innerHTML = `<span class="hist-lvl">Lv. ${hist.level}</span><span class="hist-title">${hist.title[currentLang]}</span>`;
                 container.appendChild(item);
             });
         }
 
-        // --- 3. 탭 및 시스템, 언어 함수 ---
         function changeLanguage(langCode) {
             currentLang = langCode;
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (i18n[currentLang][key]) el.innerHTML = i18n[currentLang][key];
             });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (i18n[currentLang][key]) el.setAttribute('placeholder', i18n[currentLang][key]);
+            });
+
             drawRadarChart(); renderUsers(currentSortCriteria); renderQuestList(); updatePointUI();
             if(document.getElementById('titleModal').style.display === 'flex') renderHistoryModal();
-            
-            // Toggle texts update
-            if(document.getElementById('gps-toggle').checked) document.getElementById('gps-status').innerHTML = `<span style="color:var(--neon-blue);">${i18n[currentLang].gps_on}</span>`;
-            if(document.getElementById('sync-toggle').checked) document.getElementById('sync-status').innerHTML = `<span style="color:var(--neon-blue);">${i18n[currentLang].sync_done}</span>`;
+            loadPlayerName();
         }
 
         function switchTab(tabId, el) {
@@ -489,14 +739,12 @@
             if (event.target.files[0]) output.src = URL.createObjectURL(event.target.files[0]);
         }
 
-        // --- 4. 레이더 차트 렌더링 ---
+        // --- 4. 레이더 차트 ---
         function drawRadarChart() {
             const centerX = 50, centerY = 50, radius = 33; 
-            const angles = [];
-            for(let i=0; i<6; i++) angles.push(-Math.PI / 2 + (i * Math.PI / 3));
+            const angles = []; for(let i=0; i<6; i++) angles.push(-Math.PI / 2 + (i * Math.PI / 3));
 
-            const gridGroup = document.getElementById('radarGrid');
-            const axesGroup = document.getElementById('radarAxes');
+            const gridGroup = document.getElementById('radarGrid'); const axesGroup = document.getElementById('radarAxes');
             gridGroup.innerHTML = ''; axesGroup.innerHTML = '';
             
             for (let level = 1; level <= 5; level++) {
@@ -511,18 +759,17 @@
                 const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
                 line.setAttribute('x1', centerX); line.setAttribute('y1', centerY);
                 line.setAttribute('x2', centerX + radius * Math.cos(angles[i])); line.setAttribute('y2', centerY + radius * Math.sin(angles[i]));
-                line.setAttribute('class', 'radar-bg-line');
-                axesGroup.appendChild(line);
+                line.setAttribute('class', 'radar-bg-line'); axesGroup.appendChild(line);
             }
 
             let dataPoints = "";
-            const pointsGroup = document.getElementById('radarPoints');
-            const labelsGroup = document.getElementById('radarLabels');
+            const pointsGroup = document.getElementById('radarPoints'); const labelsGroup = document.getElementById('radarLabels');
             pointsGroup.innerHTML = ''; labelsGroup.innerHTML = '';
 
             let totalSum = 0;
             for (let i = 0; i < 6; i++) {
                 const key = statKeys[i]; const val = myStats[key]; totalSum += val;
+                
                 const r = radius * (val / 100);
                 const x = centerX + r * Math.cos(angles[i]); const y = centerY + r * Math.sin(angles[i]);
                 dataPoints += `${x},${y} `;
@@ -538,13 +785,11 @@
 
                 const textName = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                 textName.setAttribute('x', lx); textName.setAttribute('y', ly - 3);
-                textName.setAttribute('text-anchor', anchor); textName.setAttribute('class', 'radar-label');
-                textName.textContent = i18n[currentLang][key];
+                textName.setAttribute('text-anchor', anchor); textName.setAttribute('class', 'radar-label'); textName.textContent = i18n[currentLang][key];
 
                 const textVal = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                 textVal.setAttribute('x', lx); textVal.setAttribute('y', ly + 4);
-                textVal.setAttribute('text-anchor', anchor); textVal.setAttribute('class', 'radar-value');
-                textVal.textContent = val;
+                textVal.setAttribute('text-anchor', anchor); textVal.setAttribute('class', 'radar-value'); textVal.textContent = val;
 
                 labelsGroup.appendChild(textName); labelsGroup.appendChild(textVal);
                 
@@ -553,15 +798,17 @@
             }
 
             const playerPolygon = document.getElementById('playerPolygon');
-            playerPolygon.setAttribute('points', "50,50 50,50 50,50 50,50 50,50 50,50"); 
+            if(!playerPolygon.getAttribute('points')) {
+                playerPolygon.setAttribute('points', "50,50 50,50 50,50 50,50 50,50 50,50"); 
+            }
             setTimeout(() => { playerPolygon.setAttribute('points', dataPoints.trim()); }, 50);
             document.getElementById('totalScore').innerHTML = `${totalSum} <span style="font-size: 1rem; color: var(--neon-blue);">pts</span>`;
         }
 
         // --- 5. 퀘스트 데이터 & 캘린더 ---
         const weeklyQuestData = [
-            [ { stat: "STR", title: {ko:"휴식과 산책", en:"Rest & Walk", ja:"休息と散歩"}, desc: {ko:"30분 가벼운 걷기", en:"30 min light walk", ja:"30分歩行"} }, { stat: "STR", title: {ko:"코어 강화", en:"Core Strength", ja:"コア強化"}, desc: {ko:"플랭크 3세트", en:"3 sets of plank", ja:"プランク3セット"} }, { stat: "INT", title: {ko:"주간 계획", en:"Weekly Plan", ja:"週間計画"}, desc: {ko:"다음 주 일정 정리", en:"Organize schedule", ja:"予定整理"} }, { stat: "INT", title: {ko:"독서 타임", en:"Reading", ja:"読書"}, desc: {ko:"비문학 1챕터", en:"Read 1 chapter", ja:"1章読む"} }, { stat: "CHA", title: {ko:"자기 반성", en:"Reflection", ja:"自己反省"}, desc: {ko:"일기 작성하기", en:"Write journal", ja:"日記作成"} }, { stat: "CHA", title: {ko:"외적 정돈", en:"Grooming", ja:"身だしなみ"}, desc: {ko:"옷 다림질", en:"Iron clothes", ja:"服の準備"} }, { stat: "VIT", title: {ko:"반신욕", en:"Bath", ja:"半身浴"}, desc: {ko:"근육 피로 풀기", en:"Relieve fatigue", ja:"疲労回復"} }, { stat: "VIT", title: {ko:"영양 균형", en:"Diet", ja:"栄養"}, desc: {ko:"채소 위주 식단", en:"Veg-heavy meal", ja:"野菜中心食事"} }, { stat: "WLTH", title: {ko:"월간 목표", en:"Monthly Goal", ja:"月間目標"}, desc: {ko:"저축 목표 설정", en:"Set saving goal", ja:"貯蓄目標"} }, { stat: "WLTH", title: {ko:"자산 리뷰", en:"Net Worth", ja:"資産確認"}, desc: {ko:"자산 현황 점검", en:"Check net worth", ja:"資産点検"} }, { stat: "AGI", title: {ko:"디지털 정리", en:"Declutter", ja:"デジタル整理"}, desc: {ko:"안 쓰는 앱 삭제", en:"Delete apps", ja:"アプリ削除"} }, { stat: "AGI", title: {ko:"루틴 세팅", en:"Alarms", ja:"アラーム"}, desc: {ko:"월요일 알람 세팅", en:"Set Monday alarm", ja:"月曜の準備"} } ],
-            [ { stat: "STR", title: {ko:"1만보 달성", en:"10k Steps", ja:"1万歩"}, desc: {ko:"걷기 늘리기", en:"Walk more", ja:"歩行追加"} }, { stat: "STR", title: {ko:"푸쉬업", en:"Pushups", ja:"腕立て伏せ"}, desc: {ko:"푸쉬업 3세트", en:"3 sets", ja:"3セット"} }, { stat: "INT", title: {ko:"독서 습관", en:"Reading", ja:"読書習慣"}, desc: {ko:"10페이지 읽기", en:"Read 10 pages", ja:"10ページ"} }, { stat: "INT", title: {ko:"지식 청취", en:"Podcast", ja:"ポッドキャスト"}, desc: {ko:"경제 팟캐스트", en:"Eco podcast", ja:"経済聴取"} }, { stat: "CHA", title: {ko:"감사 표현", en:"Gratitude", ja:"感謝"}, desc: {ko:"동료에게 감사", en:"Thank a colleague", ja:"同僚に感謝"} }, { stat: "CHA", title: {ko:"스킨케어", en:"Skincare", ja:"スキンケア"}, desc: {ko:"보습제 바르기", en:"Apply lotion", ja:"保湿"} }, { stat: "VIT", title: {ko:"수분 충전", en:"Hydration", ja:"水分補給"}, desc: {ko:"물 2리터", en:"Drink 2L water", ja:"水2L"} }, { stat: "VIT", title: {ko:"멘탈 케어", en:"Meditation", ja:"瞑想"}, desc: {ko:"10분 명상", en:"10 mins med", ja:"10分瞑想"} }, { stat: "WLTH", title: {ko:"무지출", en:"No Spend", ja:"無支出"}, desc: {ko:"소비 참기", en:"Avoid spending", ja:"消費我慢"} }, { stat: "WLTH", title: {ko:"시황 체크", en:"Market", ja:"市況"}, desc: {ko:"금융 기사 스크랩", en:"Finance article", ja:"金融記事"} }, { stat: "AGI", title: {ko:"우선순위", en:"Prioritize", ja:"優先順位"}, desc: {ko:"Top 3 업무", en:"Top 3 tasks", ja:"上位3業務"} }, { stat: "AGI", title: {ko:"뽀모도로", en:"Pomodoro", ja:"ポモドーロ"}, desc: {ko:"30분 집중 1회", en:"30 min focus", ja:"30分集中"} } ],
+            [ { stat: "STR", title: {ko:"휴식과 산책", en:"Rest & Walk", ja:"休息と散歩"}, desc: {ko:"30분 걷기", en:"30 min walk", ja:"30分歩行"} }, { stat: "STR", title: {ko:"코어 강화", en:"Core Strength", ja:"コア強化"}, desc: {ko:"플랭크 3세트", en:"3 plank sets", ja:"プランク3回"} }, { stat: "INT", title: {ko:"주간 계획", en:"Weekly Plan", ja:"週間計画"}, desc: {ko:"일정 정리", en:"Plan schedule", ja:"予定整理"} }, { stat: "INT", title: {ko:"독서 타임", en:"Reading", ja:"読書"}, desc: {ko:"비문학 1챕터", en:"Read 1 chapter", ja:"1章読む"} }, { stat: "CHA", title: {ko:"자기 반성", en:"Reflection", ja:"自己反省"}, desc: {ko:"일기 작성", en:"Write journal", ja:"日記作成"} }, { stat: "CHA", title: {ko:"외적 정돈", en:"Grooming", ja:"身だしなみ"}, desc: {ko:"옷 다림질", en:"Iron clothes", ja:"服の準備"} }, { stat: "VIT", title: {ko:"반신욕", en:"Bath", ja:"半身浴"}, desc: {ko:"피로 풀기", en:"Relieve fatigue", ja:"疲労回復"} }, { stat: "VIT", title: {ko:"영양 균형", en:"Diet", ja:"栄養"}, desc: {ko:"채소 위주 식단", en:"Veg-heavy meal", ja:"野菜中心食事"} }, { stat: "WLTH", title: {ko:"월간 목표", en:"Monthly Goal", ja:"月間目標"}, desc: {ko:"저축 목표", en:"Set saving goal", ja:"貯蓄目標"} }, { stat: "WLTH", title: {ko:"자산 리뷰", en:"Net Worth", ja:"資産確認"}, desc: {ko:"자산 점검", en:"Check net worth", ja:"資産点検"} }, { stat: "AGI", title: {ko:"디지털 정리", en:"Declutter", ja:"デジタル整理"}, desc: {ko:"앱 삭제", en:"Delete apps", ja:"アプリ削除"} }, { stat: "AGI", title: {ko:"루틴 세팅", en:"Alarms", ja:"アラーム"}, desc: {ko:"알람 세팅", en:"Set alarm", ja:"準備"} } ],
+            [ { stat: "STR", title: {ko:"1만보 달성", en:"10k Steps", ja:"1万歩"}, desc: {ko:"걷기 늘리기", en:"Walk more", ja:"歩行追加"} }, { stat: "STR", title: {ko:"푸쉬업", en:"Pushups", ja:"腕立て伏せ"}, desc: {ko:"푸쉬업 3세트", en:"3 sets", ja:"3セット"} }, { stat: "INT", title: {ko:"독서 습관", en:"Reading", ja:"読書習慣"}, desc: {ko:"10페이지 읽기", en:"Read 10 pages", ja:"10ページ"} }, { stat: "INT", title: {ko:"지식 청취", en:"Podcast", ja:"ポッドキャスト"}, desc: {ko:"경제 팟캐스트", en:"Eco podcast", ja:"経済聴取"} }, { stat: "CHA", title: {ko:"감사 표현", en:"Gratitude", ja:"感謝"}, desc: {ko:"동료에게 감사", en:"Thank a colleague", ja:"同僚に感謝"} }, { stat: "CHA", title: {ko:"스킨케어", en:"Skincare", ja:"スキンケア"}, desc: {ko:"보습제 바르기", en:"Apply lotion", ja:"保湿"} }, { stat: "VIT", title: {ko:"수분 충전", en:"Hydration", ja:"水分補給"}, desc: {ko:"물 2리터", en:"Drink 2L water", ja:"水2L"} }, { stat: "VIT", title: {ko:"멘탈 케어", en:"Meditation", ja:"瞑想"}, desc: {ko:"10분 명상", en:"10 mins med", ja:"10分瞑想"} }, { stat: "WLTH", title: {ko:"무지출", en:"No Spend", ja:"無支出"}, desc: {ko:"소비 참기", en:"Avoid spending", ja:"消費我慢"} }, { stat: "WLTH", title: {ko:"시황 체크", en:"Market", ja:"市況"}, desc: {ko:"기사 스크랩", en:"Finance article", ja:"金融記事"} }, { stat: "AGI", title: {ko:"우선순위", en:"Prioritize", ja:"優先順位"}, desc: {ko:"Top 3 업무", en:"Top 3 tasks", ja:"上位3業務"} }, { stat: "AGI", title: {ko:"뽀모도로", en:"Pomodoro", ja:"ポモドーロ"}, desc: {ko:"30분 집중", en:"30 min focus", ja:"30分集中"} } ],
             [ { stat: "STR", title: {ko:"중량 타격", en:"Weights", ja:"ウェイト"}, desc: {ko:"30분 웨이트", en:"30 min lift", ja:"30分"} }, { stat: "STR", title: {ko:"단백질", en:"Protein", ja:"タンパク質"}, desc: {ko:"단백질 식사", en:"Protein meal", ja:"食事"} }, { stat: "INT", title: {ko:"단어 수집", en:"Vocab", ja:"単語"}, desc: {ko:"새 단어 3개", en:"3 new words", ja:"新単語3つ"} }, { stat: "INT", title: {ko:"업계 동향", en:"Trend", ja:"トレンド"}, desc: {ko:"블로그 읽기", en:"Read blog", ja:"ブログ"} }, { stat: "CHA", title: {ko:"칭찬하기", en:"Compliment", ja:"褒める"}, desc: {ko:"장점 칭찬", en:"Praise someone", ja:"長所を褒める"} }, { stat: "CHA", title: {ko:"아이컨택", en:"Eye Contact", ja:"アイコンタクト"}, desc: {ko:"눈 맞추기", en:"Make eye contact", ja:"目を合わせる"} }, { stat: "VIT", title: {ko:"수면", en:"Sleep", ja:"睡眠"}, desc: {ko:"7시간 확보", en:"Sleep 7+ hrs", ja:"7時間"} }, { stat: "VIT", title: {ko:"카페인 통제", en:"No Caffeine", ja:"カフェイン減"}, desc: {ko:"오후 2시 이후 X", en:"None after 2pm", ja:"午後なし"} }, { stat: "WLTH", title: {ko:"가계부", en:"Expense Track", ja:"家計簿"}, desc: {ko:"지출 내역 정리", en:"Track daily", ja:"支出整理"} }, { stat: "WLTH", title: {ko:"소액 저축", en:"Micro Save", ja:"少額貯金"}, desc: {ko:"여윳돈 저축", en:"Save small amt", ja:"貯蓄"} }, { stat: "AGI", title: {ko:"심박수", en:"HR Up", ja:"心拍数"}, desc: {ko:"15분 러닝", en:"15 min run", ja:"15分ラン"} }, { stat: "AGI", title: {ko:"인박스 제로", en:"Inbox Zero", ja:"受信トレイ"}, desc: {ko:"밀린 답장", en:"Clear inbox", ja:"返信"} } ],
             [ { stat: "STR", title: {ko:"하체 강화", en:"Leg Day", ja:"下半身"}, desc: {ko:"계단 오르기", en:"Stairs", ja:"階段"} }, { stat: "STR", title: {ko:"스트레칭", en:"Stretch", ja:"ストレッチ"}, desc: {ko:"전신 10분", en:"10 mins", ja:"10分"} }, { stat: "INT", title: {ko:"인사이트", en:"Insight", ja:"インサイト"}, desc: {ko:"TED 강연", en:"Watch TED", ja:"TED"} }, { stat: "INT", title: {ko:"기록", en:"Record", ja:"記録"}, desc: {ko:"배운 점 요약", en:"1 line summary", ja:"1行要約"} }, { stat: "CHA", title: {ko:"네트워킹", en:"Network", ja:"ネット"}, desc: {ko:"SNS 포스팅", en:"Post on SNS", ja:"SNS投稿"} }, { stat: "CHA", title: {ko:"미소", en:"Smile", ja:"笑顔"}, desc: {ko:"미소 연습", en:"Smile practice", ja:"練習"} }, { stat: "VIT", title: {ko:"당류 제한", en:"No Sugar", ja:"糖質制限"}, desc: {ko:"단것 피하기", en:"Avoid sweets", ja:"避ける"} }, { stat: "VIT", title: {ko:"식후 산책", en:"Walk", ja:"散歩"}, desc: {ko:"10분 걷기", en:"10 min walk", ja:"10分歩行"} }, { stat: "WLTH", title: {ko:"경제 지식", en:"Study", ja:"勉強"}, desc: {ko:"자산 공부", en:"Learn crypto", ja:"資産勉強"} }, { stat: "WLTH", title: {ko:"포트폴리오", en:"Portfolio", ja:"ポートフォリオ"}, desc: {ko:"수익률 점검", en:"Check returns", ja:"収益点検"} }, { stat: "AGI", title: {ko:"타임 블로킹", en:"Time Block", ja:"時間管理"}, desc: {ko:"내일 일정", en:"Plan tmrw", ja:"予定"} }, { stat: "AGI", title: {ko:"공간 정리", en:"Clean", ja:"片付け"}, desc: {ko:"5분 정리", en:"5 min clean", ja:"5分"} } ],
             [ { stat: "STR", title: {ko:"등 근육", en:"Back", ja:"背筋"}, desc: {ko:"턱걸이", en:"Pullups", ja:"懸垂"} }, { stat: "STR", title: {ko:"바른 자세", en:"Posture", ja:"姿勢"}, desc: {ko:"거북목 교정", en:"Fix neck", ja:"首矯正"} }, { stat: "INT", title: {ko:"논리력", en:"Logic", ja:"論理"}, desc: {ko:"퍼즐 풀기", en:"Puzzles", ja:"パズル"} }, { stat: "INT", title: {ko:"복습", en:"Review", ja:"復習"}, desc: {ko:"메모 재확인", en:"Review notes", ja:"メモ確認"} }, { stat: "CHA", title: {ko:"가족 통화", en:"Call", ja:"電話"}, desc: {ko:"안부 묻기", en:"Call family", ja:"連絡"} }, { stat: "CHA", title: {ko:"향기", en:"Scent", ja:"香り"}, desc: {ko:"향수 사용", en:"Use perfume", ja:"香水"} }, { stat: "VIT", title: {ko:"디톡스", en:"Detox", ja:"デトックス"}, desc: {ko:"자기 전 폰 끄기", en:"No phone", ja:"スマホオフ"} }, { stat: "VIT", title: {ko:"심호흡", en:"Breath", ja:"呼吸"}, desc: {ko:"4-7-8 호흡", en:"Deep breath", ja:"深呼吸"} }, { stat: "WLTH", title: {ko:"구독 점검", en:"Subs", ja:"サブスク"}, desc: {ko:"안 쓰는 해지", en:"Cancel unused", ja:"解約"} }, { stat: "WLTH", title: {ko:"사이드 허슬", en:"Hustle", ja:"副業"}, desc: {ko:"수입 구상", en:"Income idea", ja:"アイデア"} }, { stat: "AGI", title: {ko:"더블 뽀모도로", en:"Focus", ja:"集中"}, desc: {ko:"1시간 집중", en:"1 hr focus", ja:"1時間"} }, { stat: "AGI", title: {ko:"2분 룰", en:"2-Min", ja:"2分"}, desc: {ko:"즉시 하기", en:"Do it now", ja:"すぐやる"} } ],
@@ -575,28 +822,26 @@
         function renderQuestList() {
             const container = document.getElementById('quest-list-container');
             container.innerHTML = '';
-            
             weeklyQuestData[currentDayOfWeek].forEach((q, idx) => {
                 const isDone = questCompletedState[currentDayOfWeek][idx];
                 const row = document.createElement('div');
                 row.className = `quest-row ${isDone ? 'done' : ''}`;
                 row.onclick = () => toggleQuest(idx);
 
-                row.innerHTML = `
-                    <div>
-                        <div class="quest-title"><span class="quest-stat-tag">${q.stat}</span>${q.title[currentLang]}</div>
-                        <div class="quest-desc">${q.desc[currentLang]}</div>
-                    </div>
-                    <div class="quest-checkbox"></div>
-                `;
+                row.innerHTML = `<div><div class="quest-title"><span class="quest-stat-tag">${q.stat}</span>${q.title[currentLang]}</div><div class="quest-desc">${q.desc[currentLang]}</div></div><div class="quest-checkbox"></div>`;
                 container.appendChild(row);
             });
         }
 
         function toggleQuest(idx) {
             const state = questCompletedState[currentDayOfWeek];
+            const q = weeklyQuestData[currentDayOfWeek][idx];
+            const sKey = q.stat.toLowerCase();
+            
             state[idx] = !state[idx];
-            if(state[idx]) userPoints += 20; else userPoints -= 20;
+            if(state[idx]) { userPoints += 20; pendingStats[sKey] += 0.5; } 
+            else { userPoints -= 20; pendingStats[sKey] -= 0.5; }
+            
             renderQuestList(); renderCalendar(); updatePointUI(); 
         }
 
@@ -629,7 +874,6 @@
             { id: 3, name: {ko:"플레이어 (나)", en:"Player (Me)", ja:"プレイヤー (私)"}, title: titleHistory[0].title, str: myStats.str, int: myStats.int, cha: myStats.cha, vit: myStats.vit, wlth: myStats.wlth, agi: myStats.agi, isMe: true, isFriend: false },
             { id: 4, name: "GangnamBabel", title: {ko:"국가권력급 자본", en:"S-Class Wealth", ja:"国家権力級 資本"}, str: 60, int: 80, cha: 90, vit: 50, wlth: 99, agi: 50, isMe: false, isFriend: false }
         ];
-        userData.forEach(u => u.total = u.str + u.int + u.cha + u.vit + u.wlth + u.agi);
 
         function toggleSocialMode(mode, btn) {
             currentSocialMode = mode;
@@ -644,6 +888,15 @@
                 document.querySelectorAll('.rank-tab-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active');
             }
             const container = document.getElementById('user-list-container'); container.innerHTML = '';
+            
+            const me = userData.find(u => u.isMe);
+            if(me) {
+                statKeys.forEach(k => me[k] = myStats[k]);
+                const savedName = localStorage.getItem('playerName');
+                if(savedName) me.name = savedName;
+            }
+            userData.forEach(u => u.total = u.str + u.int + u.cha + u.vit + u.wlth + u.agi);
+
             let dUsers = [...userData];
             if(currentSocialMode === 'friends') dUsers = dUsers.filter(u => u.isFriend);
             dUsers.sort((a, b) => b[criteria] - a[criteria]);
@@ -665,61 +918,20 @@
         }
         function toggleFriend(id) { const u = userData.find(x => x.id === id); if(u) { u.isFriend = !u.isFriend; renderUsers(currentSortCriteria); } }
 
-        // --- 7. GPS 로직 ---
-        let watchId = null;
+        // --- GPS 로직 ---
         function toggleGPS() {
             const isChecked = document.getElementById('gps-toggle').checked;
-            const statusDiv = document.getElementById('gps-status');
-            statusDiv.style.display = 'flex';
+            const statusDiv = document.getElementById('gps-status'); statusDiv.style.display = 'flex';
             if(isChecked) {
                 statusDiv.innerHTML = '...';
-                if ("geolocation" in navigator) {
-                    watchId = navigator.geolocation.watchPosition(
-                        (p) => { statusDiv.innerHTML = `<span style="color:var(--neon-blue);">${i18n[currentLang].gps_on}</span>`; },
-                        (e) => { statusDiv.innerHTML = `<span style="color:var(--neon-red);">${i18n[currentLang].gps_err}</span>`; document.getElementById('gps-toggle').checked = false; },
-                        { enableHighAccuracy: true }
-                    );
-                }
-            } else {
-                if(watchId !== null) navigator.geolocation.clearWatch(watchId);
-                statusDiv.innerHTML = `<span style="color:var(--text-sub);">${i18n[currentLang].gps_off}</span>`;
-            }
+                if ("geolocation" in navigator) navigator.geolocation.getCurrentPosition(() => statusDiv.innerHTML = `<span style="color:var(--neon-blue);">${i18n[currentLang].gps_on}</span>`, () => { statusDiv.innerHTML = `<span style="color:var(--neon-red);">${i18n[currentLang].gps_err}</span>`; document.getElementById('gps-toggle').checked = false; });
+            } else statusDiv.innerHTML = `<span style="color:var(--text-sub);">${i18n[currentLang].gps_off}</span>`;
         }
 
-        // --- 8. 신규: 건강 앱 동기화 시뮬레이션 ---
-        function toggleHealthSync() {
-            const isChecked = document.getElementById('sync-toggle').checked;
-            const statusDiv = document.getElementById('sync-status');
-            statusDiv.style.display = 'flex';
-
-            if(isChecked) {
-                // 1. 요청 중 표시
-                statusDiv.innerHTML = `<span style="color:var(--text-sub);">${i18n[currentLang].sync_req}</span>`;
-                
-                // 2. 2초 후 API 응답 수신 시뮬레이션
-                setTimeout(() => {
-                    statusDiv.innerHTML = `<span style="color:var(--neon-blue);">${i18n[currentLang].sync_done}</span>`;
-                    
-                    // 데이터 연동으로 인한 스탯 및 포인트 상승
-                    myStats.str = Math.min(100, myStats.str + 3);
-                    myStats.vit = Math.min(100, myStats.vit + 2);
-                    userPoints += 50; // 걸음수 보상 포인트
-                    
-                    updatePointUI();
-                    drawRadarChart();
-                }, 2000);
-            } else {
-                // 해제
-                statusDiv.innerHTML = `<span style="color:var(--text-sub);">${i18n[currentLang].sync_off}</span>`;
-            }
-        }
-
-        // 초기 구동
+        // 초기 구동 - 언어 세팅 후 로그인 체크
         window.onload = () => {
-            changeTheme(); 
             changeLanguage('ko'); 
-            renderCalendar();
-            updatePointUI();
+            checkLoginStatus(); 
         };
     </script>
 </body>
