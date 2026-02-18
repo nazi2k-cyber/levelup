@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>LEVEL UP: REBOOT | Optimized MVP</title>
+    <title>LEVEL UP: REBOOT | Live Dungeon</title>
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         
@@ -29,7 +29,7 @@
             box-sizing: border-box; overflow: hidden; transition: background-color 0.3s, color 0.3s;
         }
 
-        /* --- 1. 로그인 스크린 --- */
+        /* --- 로그인 뷰 --- */
         #login-screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-color: var(--bg-dark); z-index: 9999;
@@ -55,7 +55,7 @@
         .btn-google { background: #fff; color: #333; border: 1px solid #ddd; display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 10px; }
         .login-toggle { font-size: 0.8rem; color: var(--text-sub); margin-top: 20px; cursor: pointer; text-decoration: underline; }
 
-        /* --- 메인 앱 레이아웃 --- */
+        /* --- 앱 뷰 --- */
         #app-container { display: none; flex-direction: column; width: 100%; height: 100%; }
         header { padding: 12px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--panel-bg); z-index: 10; }
         #sys-title { font-weight: 900; letter-spacing: 1px; font-size: 1.1rem; }
@@ -65,16 +65,14 @@
         .view-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- UI 컴포넌트 최적화 --- */
         .system-card { background: var(--panel-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { font-size: 1rem; color: var(--neon-blue); margin-top: 0; margin-bottom: 12px; text-transform: uppercase; }
 
-        /* 프로필 및 레벨업 통합 압축 레이아웃 */
         .profile-compact-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .profile-box { display: flex; align-items: center; gap: 12px; }
         .profile-image-container { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--neon-blue); background: #222; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         .profile-img { width: 60%; height: 60%; object-fit: contain; filter: invert(0.5); }
-        .title-badge { display: inline-block; padding: 2px 6px; font-size: 0.65rem; font-weight: bold; background: linear-gradient(45deg, rgba(181, 60, 255, 0.2), transparent); border: 1px solid var(--neon-purple); color: var(--neon-purple); border-radius: 4px; margin-bottom: 3px; }
+        .title-badge { display: inline-block; padding: 2px 6px; font-size: 0.65rem; font-weight: bold; background: linear-gradient(45deg, rgba(181, 60, 255, 0.2), transparent); border: 1px solid var(--neon-purple); color: var(--neon-purple); border-radius: 4px; margin-bottom: 3px; cursor: pointer; }
         .name-container { display: flex; align-items: center; gap: 5px; }
         .btn-edit-name { background: none; border: none; font-size: 0.8rem; cursor: pointer; padding: 0; color: var(--text-sub); }
         
@@ -82,11 +80,10 @@
         .compact-score-val { font-size: 1.6rem; font-weight: 900; color: var(--neon-blue); line-height: 1; }
 
         .levelup-panel-compact { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 204, 0, 0.05); border: 1px solid var(--neon-gold); padding: 10px 12px; border-radius: 6px; }
-        .btn-primary { padding: 10px; background: var(--neon-blue); border: none; color: white; font-weight: bold; border-radius: 6px; cursor: pointer; text-align: center; font-size: 0.85rem; width: 100%; }
+        .btn-primary { padding: 10px; background: var(--neon-blue); border: none; color: white; font-weight: bold; border-radius: 6px; cursor: pointer; text-align: center; font-size: 0.85rem; width: 100%; transition: 0.2s; }
         .btn-levelup-sm { width: auto; padding: 6px 12px; font-size: 0.8rem; }
-        .btn-primary:disabled { background: #444; color: #777; border-color: #333; cursor: not-allowed; }
+        .btn-primary:disabled { background: #444 !important; color: #888 !important; border-color: #333 !important; cursor: not-allowed; box-shadow: none !important;}
 
-        /* 레이더 차트 및 스탯바 압축 */
         .radar-chart-container { display: flex; justify-content: center; margin: 5px 0 15px 0; }
         .radar-chart { width: 100%; max-width: 150px; height: auto; aspect-ratio: 1/1; }
         .radar-bg-line { fill: none; stroke: var(--border-color); stroke-width: 0.8; }
@@ -101,7 +98,6 @@
         [data-theme="light"] .progress-bg { background: #e0e0e0; }
         .pending-stat { color: var(--neon-gold); font-size: 0.7rem; margin-left: 5px; font-weight: bold; }
 
-        /* 퀘스트 & 캘린더 */
         .quest-list-wrapper { max-height: 350px; overflow-y: auto; padding-right: 5px; scrollbar-width: none; }
         .quest-list-wrapper::-webkit-scrollbar { display: none; }
         .quest-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--border-color); cursor: pointer; border-radius: 6px; }
@@ -123,7 +119,7 @@
         .cal-date { font-size: 1rem; font-weight: bold; color: var(--text-main); }
         .cal-score { font-size: 0.65rem; color: var(--neon-gold); margin-top: 3px; }
 
-        /* 던전, 소셜, 설정 */
+        /* 던전 맵용 스타일 */
         .dungeon-banner { border: 1px solid var(--neon-red); background: rgba(255, 60, 60, 0.05); text-align: center; }
         .map-container { width: 100%; height: 180px; border-radius: 6px; overflow: hidden; margin-bottom: 12px; border: 1px solid var(--border-color); }
         .map-container iframe { width: 100%; height: 100%; border: none; }
@@ -156,13 +152,11 @@
         input:checked + .slider { background: var(--neon-blue); }
         input:checked + .slider:before { transform: translateX(18px); }
 
-        /* 하단 네비게이션 */
         nav { position: fixed; bottom: env(safe-area-inset-bottom); width: 100%; height: 65px; background: var(--nav-bg); display: flex; border-top: 1px solid var(--border-color); z-index: 10; }
         .nav-item { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 0.6rem; color: var(--text-sub); cursor: pointer; }
         .nav-item.active { color: var(--neon-blue); }
         .nav-icon { font-size: 1.2rem; margin-bottom: 3px; }
 
-        /* 모달 */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; display: none; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
         .modal-content { background: var(--panel-bg); border: 1px solid var(--neon-blue); padding: 20px; border-radius: 10px; width: 85%; max-height: 70vh; display: flex; flex-direction: column; }
         .modal-header { font-size: 1.1rem; font-weight: bold; color: var(--neon-blue); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
@@ -301,16 +295,8 @@
 
             <section id="dungeon" class="view-section">
                 <h2 data-i18n="raid_title">Local Raid</h2>
-                <div class="system-card dungeon-banner">
-                    <h3 style="color: var(--neon-red); margin: 0 0 10px 0; font-size:1.1rem;" data-i18n="raid_boss">⚠️ 서울 강남 연합 보스 출현</h3>
-                    <div class="map-container">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3164.8872958213665!2d127.02498261564757!3d37.49805097981048!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca1598c471015%3A0x6b0d1e57c631a3!2z6rCV64Ko7Jet!5e0!3m2!1sko!2skr!4v1690000000000!5m2!1sko!2skr" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <div class="system-card dungeon-banner" id="dungeon-banner">
                     </div>
-                    <p style="font-size: 0.8rem; color: var(--text-main); margin-bottom: 5px;" data-i18n="raid_desc1">"퇴근길의 유혹자"가 감지되었습니다.</p>
-                    <p style="font-size: 0.7rem; color: var(--text-sub);" data-i18n="raid_desc2">근처 헌터들과 연합하여 2시간 내<br>합산 50km를 달성하고 전리품을 획득하세요.</p>
-                    <div style="font-size: 0.8rem; margin: 12px 0; font-weight:bold;"><span data-i18n="raid_part">참여 인원: </span><span style="color:var(--neon-blue)">4</span> / 10</div>
-                    <button class="btn-primary" style="background: var(--neon-red);" data-i18n="raid_btn">레이드 입장하기</button>
-                </div>
             </section>
 
             <section id="social" class="view-section">
@@ -383,7 +369,7 @@
     </div>
 
     <script>
-        // --- 0. 로그인 및 인증 로직 (정규식 검증 추가) ---
+        // --- 0. 로그인 및 인증 로직 ---
         let isLoginMode = true;
 
         function checkLoginStatus() {
@@ -391,8 +377,8 @@
             if (isLoggedIn === 'true') {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('app-container').style.display = 'flex';
-                changeTheme(); loadPlayerName(); changeLanguage(currentLang); renderCalendar(); updatePointUI();
-                drawRadarChart(); 
+                changeTheme(); loadPlayerName(); changeLanguage(currentLang); 
+                renderCalendar(); updatePointUI(); drawRadarChart(); updateDungeonStatus();
             } else {
                 document.getElementById('login-screen').style.display = 'flex';
                 document.getElementById('app-container').style.display = 'none';
@@ -428,14 +414,10 @@
             const pw = document.getElementById('login-pw').value;
             const pwConfirm = document.getElementById('login-pw-confirm').value;
 
-            // 공백 체크
             if(!email || !pw) { alert(i18n[currentLang].login_err_empty); return; }
-
-            // 이메일 정규식 검증
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if(!emailRegex.test(email)) { alert(i18n[currentLang].login_err_email); return; }
 
-            // 회원가입 시 비밀번호 유효성 검증
             if(!isLoginMode) {
                 const hasUppercase = /[A-Z]/.test(pw);
                 const specialChars = pw.match(/[^a-zA-Z0-9]/g) || [];
@@ -444,21 +426,14 @@
                 }
                 if(pw !== pwConfirm) { alert(i18n[currentLang].pw_mismatch); return; }
             }
-
-            localStorage.setItem('isLoggedIn', 'true');
-            checkLoginStatus();
+            localStorage.setItem('isLoggedIn', 'true'); checkLoginStatus();
         }
 
-        function simulateGoogleLogin() {
-            localStorage.setItem('isLoggedIn', 'true');
-            checkLoginStatus();
-        }
+        function simulateGoogleLogin() { localStorage.setItem('isLoggedIn', 'true'); checkLoginStatus(); }
 
         function logout() {
             localStorage.removeItem('isLoggedIn');
-            document.getElementById('login-email').value = '';
-            document.getElementById('login-pw').value = '';
-            document.getElementById('login-pw-confirm').value = '';
+            document.getElementById('login-email').value = ''; document.getElementById('login-pw').value = ''; document.getElementById('login-pw-confirm').value = '';
             
             isLoginMode = true; 
             document.getElementById('btn-login-submit').setAttribute('data-i18n', 'btn_login_submit');
@@ -467,11 +442,10 @@
             document.getElementById('pw-hint').style.display = 'none';
             document.getElementById('disclaimer-box').style.display = 'none';
             
-            changeLanguage(currentLang);
-            checkLoginStatus();
+            changeLanguage(currentLang); checkLoginStatus();
         }
 
-        // --- 1. 다국어 사전 (전체 메뉴 및 Placeholder 포함) ---
+        // --- 1. 다국어 사전 ---
         const i18n = {
             ko: {
                 login_desc: "시스템에 접속하여 현실을 게임처럼.", btn_login_submit: "시스템 접속 (로그인)", btn_signup_submit: "새 플레이어 등록 (회원가입)", 
@@ -488,7 +462,11 @@
                 str: "근력", int: "지능", cha: "매력", vit: "체력", wlth: "재력", agi: "민첩",
                 bar_str: "근력 (물리/운동)", bar_int: "지능 (학습/인지)", bar_cha: "매력 (인맥/소통)", bar_vit: "체력 (수면/회복)", bar_wlth: "재력 (자본/투자)", bar_agi: "민첩 (시간/효율)",
                 quest_title: "Daily Quests", quest_hint: "※ 완료 시 +20P & 스탯 +0.5 대기 적립", cal_title: "주간 진척도",
-                raid_title: "Local Raid", raid_boss: "⚠️ 서울 강남 연합 보스 출현", raid_desc1: '"퇴근길의 유혹자"가 감지되었습니다.', raid_desc2: "근처 헌터들과 연합하여 2시간 내<br>합산 50km를 달성하고 전리품을 획득하세요.", raid_part: "참여 인원: ", raid_btn: "레이드 입장하기",
+                
+                raid_title: "Local Raid", raid_boss: "연합 보스 출현", raid_waiting: "던전 출현 대기 중...", raid_time_info: "출현 시간: 06:00~08:00 | 11:30~13:30 | 19:00~21:00",
+                raid_desc1: '"게으름의 늪"이 감지되었습니다.', raid_desc2: "해당 지하철역 인근의 헌터들과 연합하여<br>미션을 달성하고 전리품을 획득하세요.", 
+                raid_part: "참여 인원: ", raid_btn: "레이드 입장하기", raid_joined: "참여 완료", raid_success: "레이드 완료!",
+                
                 soc_global: "🏆 글로벌 랭킹", soc_friend: "👥 내 친구", sort_tot: "종합스코어", sort_str: "근력", sort_int: "지능", sort_cha: "매력", sort_vit: "체력", sort_wlth: "재력", sort_agi: "민첩",
                 set_title: "System Settings", set_lang: "언어 (Language)", set_theme: "라이트 모드", set_push: "푸시 알림 수신", set_gps: "앱 실행 시 현위치 탐색", set_sync: "건강 앱 동기화", set_logout: "로그아웃",
                 no_friend: "등록된 친구가 없습니다.", btn_add: "친구 추가", btn_added: "친구 ✓", gps_on: "위치 권한 활성화됨", gps_off: "위치 탐색 중지됨", gps_err: "위치 정보 오류", modal_title: "칭호 이력 조회",
@@ -499,7 +477,7 @@
                 btn_google_login: "Continue with Google", auth_toggle_signup: "No account? Sign Up", auth_toggle_login: "Already have an account? Login",
                 ph_email: "Email Address", ph_pw: "Password", ph_pw_conf: "Confirm Password",
                 pw_req_hint: "※ Password: 8+ chars, 1+ uppercase, 2+ special chars",
-                disclaimer_txt: "※ By signing up, you agree to our Disclaimer. This app does not provide medical advice and is not liable for any injuries during quests.",
+                disclaimer_txt: "※ By signing up, you agree to our Terms. This app does not provide medical advice and is not liable for injuries.",
                 login_err_empty: "Please enter your email and password.", login_err_email: "Please enter a valid email address.",
                 login_err_pw_req: "Password must be 8+ characters with at least 1 uppercase and 2 special characters.", pw_mismatch: "Passwords do not match.",
                 
@@ -509,7 +487,11 @@
                 str: "STR", int: "INT", cha: "CHA", vit: "VIT", wlth: "WLTH", agi: "AGI",
                 bar_str: "STR (Physical)", bar_int: "INT (Cognitive)", bar_cha: "CHA (Social)", bar_vit: "VIT (Recovery)", bar_wlth: "WLTH (Capital)", bar_agi: "AGI (Efficiency)",
                 quest_title: "Daily Quests", quest_hint: "※ Earn +20P & +0.5 pending stat per quest", cal_title: "Weekly Progress",
-                raid_title: "Local Raid", raid_boss: "⚠️ Gangnam Alliance Boss", raid_desc1: '"Predator of Laziness" detected.', raid_desc2: "Unite with nearby hunters to achieve<br>50km in 2 hours and get loot.", raid_part: "Participants: ", raid_btn: "Enter Raid",
+                
+                raid_title: "Local Raid", raid_boss: "Alliance Boss", raid_waiting: "Waiting for Dungeon...", raid_time_info: "Open Hours: 06:00~08:00 | 11:30~13:30 | 19:00~21:00",
+                raid_desc1: '"Swamp of Laziness" detected.', raid_desc2: "Unite with hunters near the station<br>to complete the mission and get loot.", 
+                raid_part: "Participants: ", raid_btn: "Enter Raid", raid_joined: "Joined", raid_success: "Raid Success!",
+                
                 soc_global: "🏆 Global Rank", soc_friend: "👥 My Friends", sort_tot: "Total", sort_str: "STR", sort_int: "INT", sort_cha: "CHA", sort_vit: "VIT", sort_wlth: "WLTH", sort_agi: "AGI",
                 set_title: "System Settings", set_lang: "Language", set_theme: "Light Theme", set_push: "Push Notifications", set_gps: "Auto Location Tracking", set_sync: "Health App Sync", set_logout: "Logout",
                 no_friend: "No friends registered.", btn_add: "Add Friend", btn_added: "Friend ✓", gps_on: "Location tracking on", gps_off: "Location tracking off", gps_err: "Location Error", modal_title: "Title History",
@@ -519,18 +501,22 @@
                 login_desc: "システムに接続し、現実をゲームのように。", btn_login_submit: "システム接続 (ログイン)", btn_signup_submit: "新規プレイヤー登録", 
                 btn_google_login: "Googleで続行", auth_toggle_signup: "アカウントがありませんか？ 新規登録", auth_toggle_login: "すでにアカウントをお持ちですか？ ログイン",
                 ph_email: "メールアドレス", ph_pw: "パスワード", ph_pw_conf: "パスワード (確認用)",
-                pw_req_hint: "※ パスワード: 8文字以上、大文字1つ以上、特殊文字2つ以上",
-                disclaimer_txt: "※ 登録により免責事項に同意したとみなされます。本アプリは医療的助言を提供するものではなく、クエスト中の怪我等について一切の責任を負いません。",
+                pw_req_hint: "※ パスワード: 8文字以上、大文字1つ、特殊文字2つ以上",
+                disclaimer_txt: "※ 登録により免責事項に同意したとみなされます。本アプリは医療的助言を提供するものではなく、怪我等について一切の責任を負いません。",
                 login_err_empty: "メールアドレスとパスワードを入力してください。", login_err_email: "有効なメールアドレスを入力してください。",
                 login_err_pw_req: "パスワードの条件(8文字以上、大文字1つ以上、特殊文字2つ以上)を満たしてください。", pw_mismatch: "パスワードが一致しません。",
 
                 nav_status: "ステータス", nav_quest: "クエスト", nav_dungeon: "ダンジョン", nav_social: "ソーシャル", nav_settings: "設定",
                 prof_name: "プレイヤー (私)", btn_hist: "称号履歴", avail_pts: "保有ポイント", btn_lvlup: "レベルUP", req_pts: "必要量:",
-                tot_score: "総合スコア", radar_title: "ステータスレーダー", stat_hint: "※ 待機ステータスはレベルUP時に反映されます。",
+                tot_score: "総合スコア", radar_title: "ステータスレーダー", stat_hint: "※ 待機ステータスはレベルUP時に反映",
                 str: "筋力", int: "知能", cha: "魅力", vit: "体力", wlth: "財力", agi: "敏捷",
                 bar_str: "筋力 (運動)", bar_int: "知能 (認知)", bar_cha: "魅力 (人脈)", bar_vit: "体力 (回復)", bar_wlth: "財力 (資本)", bar_agi: "敏捷 (効率)",
                 quest_title: "デイリークエスト", quest_hint: "※ 完了で +20P & 待機ステータス+0.5", cal_title: "週間進捗度",
-                raid_title: "ローカルレイド", raid_boss: "⚠️ 江南連合ボス出現", raid_desc1: "「怠惰の捕食者」感知。", raid_desc2: "近くのハンターと連合して2時間以内に<br>合計50kmを達成し戦利品を獲得せよ。", raid_part: "参加人数: ", raid_btn: "入場する",
+                
+                raid_title: "ローカルレイド", raid_boss: "連合ボス出現", raid_waiting: "ダンジョン出現待機中...", raid_time_info: "出現時間: 06:00~08:00 | 11:30~13:30 | 19:00~21:00",
+                raid_desc1: "「怠惰の沼」感知。", raid_desc2: "駅周辺のハンターと連合し、<br>ミッションを達成して戦利品を獲得せよ。", 
+                raid_part: "参加人数: ", raid_btn: "入場する", raid_joined: "参加完了", raid_success: "レイド成功！",
+                
                 soc_global: "🏆 グローバルランク", soc_friend: "👥 マイフレンド", sort_tot: "総合", sort_str: "筋力", sort_int: "知能", sort_cha: "魅力", sort_vit: "体力", sort_wlth: "財力", sort_agi: "敏捷",
                 set_title: "システム設定", set_lang: "言語 (Language)", set_theme: "ライトモード", set_push: "プッシュ通知受信", set_gps: "起動時の位置情報取得", set_sync: "ヘルスケアアプリ同期", set_logout: "ログアウト",
                 no_friend: "友達がいません。", btn_add: "友達追加", btn_added: "友達 ✓", gps_on: "位置情報有効", gps_off: "位置情報停止", gps_err: "位置情報エラー", modal_title: "称号履歴",
@@ -602,14 +588,15 @@
             if(userPoints >= reqPts) {
                 btn.disabled = false; btn.style.background = "var(--neon-gold)"; btn.style.color = "black"; btn.style.boxShadow = "0 0 15px var(--neon-gold)";
             } else {
-                btn.disabled = true; btn.style.background = "#444"; btn.style.color = "#777"; btn.style.boxShadow = "none";
+                btn.disabled = true; btn.style.background = "#444"; btn.style.color = "#888"; btn.style.boxShadow = "none";
             }
             document.getElementById('prof-title-badge').innerText = titleHistory[titleHistory.length - 1].title[currentLang];
             
             statKeys.forEach(k => {
                 const pendEl = document.getElementById(`pendVal_${k}`);
-                if (pendingStats[k] > 0) pendEl.textContent = `(+${pendingStats[k]})`;
-                else if (pendingStats[k] < 0) pendEl.textContent = `(${pendingStats[k]})`;
+                const pVal = pendingStats[k];
+                if (pVal > 0) pendEl.textContent = `(+${pVal.toFixed(1).replace('.0', '')})`;
+                else if (pVal < 0) pendEl.textContent = `(${pVal.toFixed(1).replace('.0', '')})`;
                 else pendEl.textContent = "";
             });
         }
@@ -657,7 +644,6 @@
             });
         }
 
-        // 전체 메뉴 및 플레이스홀더 다국어 적용 최적화
         function changeLanguage(langCode) {
             currentLang = langCode;
             document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -669,9 +655,8 @@
                 if (i18n[currentLang][key]) el.setAttribute('placeholder', i18n[currentLang][key]);
             });
 
-            // 앱이 화면에 떠 있을 때만 차트 렌더링 호출
             if(document.getElementById('app-container').style.display !== 'none') {
-                drawRadarChart(); renderUsers(currentSortCriteria); renderQuestList(); updatePointUI();
+                drawRadarChart(); renderUsers(currentSortCriteria); renderQuestList(); updatePointUI(); updateDungeonStatus();
                 if(document.getElementById('titleModal').style.display === 'flex') renderHistoryModal();
                 loadPlayerName();
             }
@@ -685,6 +670,7 @@
             if(tabId === 'social') renderUsers(currentSortCriteria);
             if(tabId === 'status') { drawRadarChart(); updatePointUI(); }
             if(tabId === 'quests') { renderQuestList(); renderCalendar(); }
+            if(tabId === 'dungeon') { updateDungeonStatus(); }
         }
 
         function changeTheme() {
@@ -693,6 +679,11 @@
             let themeMeta = document.querySelector('meta[name="theme-color"]') || document.createElement('meta');
             themeMeta.name = "theme-color"; themeMeta.content = isLight ? "#ffffff" : "#050508";
             document.head.appendChild(themeMeta);
+        }
+
+        function loadProfileImage(event) {
+            const output = document.getElementById('profilePreview');
+            if (event.target.files[0]) output.src = URL.createObjectURL(event.target.files[0]);
         }
 
         // --- 4. 레이더 차트 렌더링 ---
@@ -823,7 +814,103 @@
             }
         }
 
-        // --- 6. 소셜 랭킹 ---
+        // --- 6. 실시간 던전 (레이드) 로직 ---
+        const seoulStations = [
+            { name: {ko: "강남역", en: "Gangnam Stn", ja: "江南駅"}, lat: 37.4979, lng: 127.0276 },
+            { name: {ko: "홍대입구역", en: "Hongdae Stn", ja: "弘大入口駅"}, lat: 37.5568, lng: 126.9242 },
+            { name: {ko: "잠실역", en: "Jamsil Stn", ja: "蚕室駅"}, lat: 37.5133, lng: 127.1001 },
+            { name: {ko: "여의도역", en: "Yeouido Stn", ja: "汝矣島駅"}, lat: 37.5216, lng: 126.9241 },
+            { name: {ko: "신도림역", en: "Sindorim Stn", ja: "新道林駅"}, lat: 37.5088, lng: 126.8912 }
+        ];
+
+        let dungeonState = {
+            lastGeneratedDate: null,
+            slot: 0, // 0: inactive, 1: 06-08, 2: 11.5-13.5, 3: 19-21
+            stationIdx: 0,
+            participants: 4,
+            isJoined: false
+        };
+
+        function updateDungeonStatus() {
+            const now = new Date();
+            const h = now.getHours();
+            const m = now.getMinutes();
+            const timeVal = h + m / 60;
+            
+            let currentSlot = 0;
+            if (timeVal >= 6 && timeVal < 8) currentSlot = 1;
+            else if (timeVal >= 11.5 && timeVal < 13.5) currentSlot = 2;
+            else if (timeVal >= 19 && timeVal < 21) currentSlot = 3;
+
+            const dateStr = now.toDateString();
+            
+            // 시간대 또는 날짜가 변경되었을 때 던전 새로 생성
+            if (dungeonState.lastGeneratedDate !== dateStr || dungeonState.slot !== currentSlot) {
+                dungeonState.lastGeneratedDate = dateStr;
+                dungeonState.slot = currentSlot;
+                if (currentSlot > 0) {
+                    dungeonState.stationIdx = Math.floor(Math.random() * seoulStations.length);
+                    dungeonState.participants = Math.floor(Math.random() * 5) + 3; // 3~7명 시작
+                    dungeonState.isJoined = false;
+                }
+            }
+            renderDungeon();
+        }
+
+        function renderDungeon() {
+            const banner = document.getElementById('dungeon-banner');
+            if (dungeonState.slot === 0) {
+                // 비활성 시간대
+                banner.innerHTML = `
+                    <h3 style="color: var(--text-sub); margin: 0 0 10px 0; font-size:1.1rem;">${i18n[currentLang].raid_waiting}</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 5px;">${i18n[currentLang].raid_time_info}</p>
+                `;
+            } else {
+                // 활성 시간대
+                const st = seoulStations[dungeonState.stationIdx];
+                const stName = st.name[currentLang];
+                const mapUrl = `https://maps.google.com/maps?q=${st.lat},${st.lng}&z=15&output=embed`;
+                
+                let btnHtml = '';
+                if(dungeonState.isJoined) {
+                    btnHtml = `<button class="btn-primary" style="background: #444; color: #888; border-color: #333; cursor: not-allowed;" disabled>${i18n[currentLang].raid_joined}</button>`;
+                } else {
+                    btnHtml = `<button class="btn-primary" style="background: var(--neon-red);" onclick="joinDungeon()">${i18n[currentLang].raid_btn}</button>`;
+                }
+
+                banner.innerHTML = `
+                    <h3 style="color: var(--neon-red); margin: 0 0 10px 0; font-size:1.1rem;">⚠️ ${stName} ${i18n[currentLang].raid_boss}</h3>
+                    <div class="map-container">
+                        <iframe src="${mapUrl}" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                    <p style="font-size: 0.8rem; color: var(--text-main); margin-bottom: 5px;">${i18n[currentLang].raid_desc1}</p>
+                    <p style="font-size: 0.7rem; color: var(--text-sub);">${i18n[currentLang].raid_desc2}</p>
+                    <div style="font-size: 0.8rem; margin: 12px 0; font-weight:bold;">${i18n[currentLang].raid_part} <span style="color:var(--neon-blue)">${dungeonState.participants}</span> / 10</div>
+                    ${btnHtml}
+                `;
+            }
+        }
+
+        function joinDungeon() {
+            if(dungeonState.isJoined) return;
+            
+            const multiplier = Math.floor(Math.random() * 3) + 1; // 1~3배
+            const pts = 100 * multiplier;
+            const agiInc = 2.5 * multiplier;
+
+            userPoints += pts;
+            pendingStats.agi += agiInc;
+            
+            dungeonState.isJoined = true;
+            dungeonState.participants++;
+            
+            renderDungeon();
+            updatePointUI();
+            
+            alert(`${i18n[currentLang].raid_success}\n[x${multiplier} Reward] ${pts} P / AGI +${agiInc}`);
+        }
+
+        // --- 7. 소셜 랭킹 ---
         let currentSocialMode = 'global'; 
         let currentSortCriteria = 'total';
         const userData = [
@@ -876,20 +963,12 @@
         }
         function toggleFriend(id) { const u = userData.find(x => x.id === id); if(u) { u.isFriend = !u.isFriend; renderUsers(currentSortCriteria); } }
 
-        // --- GPS 로직 ---
-        function toggleGPS() {
-            const isChecked = document.getElementById('gps-toggle').checked;
-            const statusDiv = document.getElementById('gps-status'); statusDiv.style.display = 'flex';
-            if(isChecked) {
-                statusDiv.innerHTML = '...';
-                if ("geolocation" in navigator) navigator.geolocation.getCurrentPosition(() => statusDiv.innerHTML = `<span style="color:var(--neon-blue);">${i18n[currentLang].gps_on}</span>`, () => { statusDiv.innerHTML = `<span style="color:var(--neon-red);">${i18n[currentLang].gps_err}</span>`; document.getElementById('gps-toggle').checked = false; });
-            } else statusDiv.innerHTML = `<span style="color:var(--text-sub);">${i18n[currentLang].gps_off}</span>`;
-        }
-
-        // 초기 구동 - 언어 세팅 후 로그인 체크
+        // --- 초기 구동 ---
         window.onload = () => {
             changeLanguage('ko'); 
             checkLoginStatus(); 
+            // 1분마다 던전 상태 체크 갱신
+            setInterval(updateDungeonStatus, 60000); 
         };
     </script>
 </body>
